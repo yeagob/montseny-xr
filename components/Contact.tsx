@@ -11,7 +11,7 @@ const Contact: React.FC = () => {
             <p className="font-rajdhani text-gray-400 text-lg">Transformemos tu idea en una realidad extendida.</p>
           </div>
           
-          <a href="mailto:contact@montsenyxr.com" className="px-8 py-4 bg-montseny-green text-black font-orbitron font-bold rounded hover:bg-white hover:shadow-[0_0_30px_rgba(108,194,74,0.6)] transition-all duration-300">
+          <a href="mailto:santiago@xr-dreams.com" className="px-8 py-4 bg-montseny-green text-black font-orbitron font-bold rounded hover:bg-white hover:shadow-[0_0_30px_rgba(108,194,74,0.6)] transition-all duration-300">
             INICIAR PROYECTO
           </a>
         </div>
@@ -37,10 +37,10 @@ const Contact: React.FC = () => {
           <div>
              <h4 className="font-orbitron text-white font-bold mb-4">CONECTAR</h4>
              <div className="flex space-x-4">
-               <a href="#" className="text-gray-400 hover:text-white hover:scale-125 transition-transform"><Github /></a>
-               <a href="#" className="text-gray-400 hover:text-blue-500 hover:scale-125 transition-transform"><Linkedin /></a>
-               <a href="#" className="text-gray-400 hover:text-sky-400 hover:scale-125 transition-transform"><Twitter /></a>
-               <a href="#" className="text-gray-400 hover:text-red-400 hover:scale-125 transition-transform"><Mail /></a>
+               <a href="https://github.com/yeagob" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white hover:scale-125 transition-transform"><Github /></a>
+               <a href="https://www.linkedin.com/in/santiago-gamelover/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-500 hover:scale-125 transition-transform"><Linkedin /></a>
+               <a href="https://x.com/SantiGameLover" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-sky-400 hover:scale-125 transition-transform"><Twitter /></a>
+               <a href="mailto:santiago@xr-dreams.com" className="text-gray-400 hover:text-red-400 hover:scale-125 transition-transform"><Mail /></a>
              </div>
           </div>
         </div>
