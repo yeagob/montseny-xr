@@ -323,9 +323,9 @@ const NeuralInterface: React.FC = () => {
                          <Terminal className="w-12 h-12 text-montseny-blue mb-6 group-hover:scale-110 transition-transform duration-300" />
                          <h3 className="font-orbitron text-2xl text-white mb-2 group-hover:text-montseny-blue transition-colors">TERMINAL LINK</h3>
                          <p className="font-mono text-sm text-gray-500 group-hover:text-gray-300">
-                            > Protocolo de texto<br/>
-                            > Consultas técnicas<br/>
-                            > Baja latencia
+                            {'>'} Protocolo de texto<br/>
+                            {'>'} Consultas técnicas<br/>
+                            {'>'} Baja latencia
                          </p>
                      </button>
 
@@ -338,9 +338,9 @@ const NeuralInterface: React.FC = () => {
                          <Activity className="w-12 h-12 text-montseny-green mb-6 group-hover:scale-110 transition-transform duration-300" />
                          <h3 className="font-orbitron text-2xl text-white mb-2 group-hover:text-montseny-green transition-colors">NEURAL VOICE</h3>
                          <p className="font-mono text-sm text-gray-500 group-hover:text-gray-300">
-                            > Comunicación verbal<br/>
-                            > Gemini Live Audio<br/>
-                            > Inmersión total
+                            {'>'} Comunicación verbal<br/>
+                            {'>'} Gemini Live Audio<br/>
+                            {'>'} Inmersión total
                          </p>
                      </button>
                  </div>
@@ -394,7 +394,7 @@ const NeuralInterface: React.FC = () => {
                         {isTextThinking && (
                             <div className="flex justify-start">
                                 <div className="text-montseny-green font-mono animate-pulse">
-                                    > PROCESSING REQUEST...
+                                    {'>'} PROCESSING REQUEST...
                                 </div>
                             </div>
                         )}
