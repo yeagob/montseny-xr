@@ -1,7 +1,12 @@
+
 import React from 'react';
 import { Mail, Github, Linkedin, Twitter } from 'lucide-react';
 
-const Contact: React.FC = () => {
+interface ContactProps {
+    onStartGame: () => void;
+}
+
+const Contact: React.FC<ContactProps> = ({ onStartGame }) => {
   return (
     <footer id="contact" className="bg-montseny-forest/20 border-t border-montseny-green/20 pt-20 pb-10">
       <div className="max-w-7xl mx-auto px-4">
@@ -11,9 +16,12 @@ const Contact: React.FC = () => {
             <p className="font-rajdhani text-gray-400 text-lg">Let's transform your idea into an extended reality.</p>
           </div>
           
-          <a href="mailto:santiago@xr-dreams.com" className="px-8 py-4 bg-montseny-green text-black font-orbitron font-bold rounded hover:bg-white hover:shadow-[0_0_30px_rgba(108,194,74,0.6)] transition-all duration-300">
+          <button 
+            onClick={onStartGame}
+            className="px-8 py-4 bg-montseny-green text-black font-orbitron font-bold rounded hover:bg-white hover:shadow-[0_0_30px_rgba(108,194,74,0.6)] transition-all duration-300"
+          >
             START PROJECT
-          </a>
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-white/10 pt-12">
@@ -30,8 +38,9 @@ const Contact: React.FC = () => {
           <div className="flex flex-col space-y-2">
              <h4 className="font-orbitron text-white font-bold mb-2">LINKS</h4>
              <a href="#hero" className="text-gray-400 hover:text-montseny-green">Home</a>
-             <a href="#portfolio" className="text-gray-400 hover:text-montseny-green">Projects</a>
+             <a href="#services" className="text-gray-400 hover:text-montseny-green">Services</a>
              <a href="#ian" className="text-gray-400 hover:text-montseny-blue">IAN (Chat)</a>
+             <a href="#portfolio" className="text-gray-400 hover:text-montseny-green">Projects</a>
           </div>
 
           <div>

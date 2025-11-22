@@ -324,9 +324,9 @@ const NeuralInterface: React.FC = () => {
                          <Terminal className="w-12 h-12 text-montseny-blue mb-6 group-hover:scale-110 transition-transform duration-300" />
                          <h3 className="font-orbitron text-2xl text-white mb-2 group-hover:text-montseny-blue transition-colors">TEXT CHAT</h3>
                          <p className="font-mono text-sm text-gray-500 group-hover:text-gray-300">
-                            {'>'} Ask questions about projects<br/>
-                            {'>'} Fast and accurate answers<br/>
-                            {'>'} Powered by Gemini
+                            > Ask questions about projects<br/>
+                            > Fast and accurate answers<br/>
+                            > Powered by Gemini
                          </p>
                      </button>
 
@@ -339,9 +339,9 @@ const NeuralInterface: React.FC = () => {
                          <Activity className="w-12 h-12 text-montseny-green mb-6 group-hover:scale-110 transition-transform duration-300" />
                          <h3 className="font-orbitron text-2xl text-white mb-2 group-hover:text-montseny-green transition-colors">VOICE MODE (LIVE)</h3>
                          <p className="font-mono text-sm text-gray-500 group-hover:text-gray-300">
-                            {'>'} Speak naturally with IAN<br/>
-                            {'>'} Real-time audio responses<br/>
-                            {'>'} Fluid conversational experience
+                            > Speak naturally with IAN<br/>
+                            > Real-time audio responses<br/>
+                            > Fluid conversational experience
                          </p>
                      </button>
                  </div>
@@ -395,7 +395,7 @@ const NeuralInterface: React.FC = () => {
                         {isTextThinking && (
                             <div className="flex justify-start">
                                 <div className="text-montseny-green font-mono animate-pulse">
-                                    {'>'} IAN IS TYPING...
+                                    > IAN IS TYPING...
                                 </div>
                             </div>
                         )}

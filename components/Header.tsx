@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, Zap } from 'lucide-react';
 
-const Header: React.FC = () => {
+import React, { useState, useEffect } from 'react';
+import { Menu, X, Play } from 'lucide-react';
+
+interface HeaderProps {
+  onStartGame: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onStartGame }) => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -29,8 +34,9 @@ const Header: React.FC = () => {
           <div className="flex items-center">
             <div className="relative group cursor-pointer">
                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-montseny-green to-montseny-forest rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(108,194,74,0.5)] group-hover:shadow-[0_0_25px_rgba(108,194,74,0.8)] transition-all duration-300">
-                    <Zap className="text-white w-6 h-6" />
+                  <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(108,194,74,0.5)] group-hover:shadow-[0_0_25px_rgba(108,194,74,0.8)] transition-all duration-300 overflow-hidden border border-montseny-green">
+                    {/* Placeholder for logo image */}
+                    <div className="w-full h-full bg-montseny-forest/50"></div> 
                   </div>
                   <span className="font-orbitron text-2xl font-bold tracking-wider text-white">
                     MONTSENY <span className="text-montseny-green">XR</span>
@@ -41,6 +47,12 @@ const Header: React.FC = () => {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-8">
+            <button 
+              onClick={onStartGame}
+              className="flex items-center gap-2 font-orbitron font-bold text-montseny-green hover:text-white transition-colors"
+            >
+              <Play className="w-4 h-4" /> PLAY
+            </button>
             {navLinks.map((link) => (
               <a 
                 key={link.name} 
@@ -69,6 +81,15 @@ const Header: React.FC = () => {
       {isOpen && (
         <div className="md:hidden glass-panel absolute w-full top-full left-0 border-t border-gray-800">
           <div className="px-4 pt-2 pb-6 space-y-2">
+             <button 
+                onClick={() => {
+                    onStartGame();
+                    setIsOpen(false);
+                }}
+                className="block w-full text-left px-3 py-4 font-orbitron text-base font-medium text-montseny-green hover:bg-white/5 rounded-md"
+             >
+                PLAY SIMULATION
+             </button>
              {navLinks.map((link) => (
               <a 
                 key={link.name} 

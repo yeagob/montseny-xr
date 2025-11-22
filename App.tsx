@@ -33,14 +33,14 @@ function App() {
         <VoxelGame onClose={() => setIsGameMode(false)} />
       ) : (
         <div className="bg-montseny-dark min-h-screen selection:bg-montseny-green selection:text-black">
-          <Header />
+          <Header onStartGame={() => setIsGameMode(true)} />
           <main>
             <Hero onStartGame={() => setIsGameMode(true)} />
+            <Services />
             <NeuralInterface />
             <Projects />
-            <Services />
           </main>
-          <Contact />
+          <Contact onStartGame={() => setIsGameMode(true)} />
         </div>
       )}
     </>

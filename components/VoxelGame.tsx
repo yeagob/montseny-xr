@@ -6,6 +6,41 @@ import * as THREE from 'three';
 import { BlockType, VoxelBlock } from '../types';
 import { X, Play, Mail, MousePointer2, Hand, Move, Eye, Copy, Check, Terminal } from 'lucide-react';
 
+// --- Sound Logic ---
+
+const playSound = (type: 'place' | 'remove') => {
+  const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+  if (!AudioContext) return;
+  
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  
+  const now = ctx.currentTime;
+  
+  if (type === 'place') {
+    // High pitch "blip" for placing/picking resource
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, now);
+    osc.frequency.exponentialRampToValueAtTime(400, now + 0.1);
+    gain.gain.setValueAtTime(0.05, now);
+    gain.gain.linearRampToValueAtTime(0, now + 0.1);
+  } else {
+    // Lower pitch for removing placed block
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(300, now);
+    osc.frequency.linearRampToValueAtTime(100, now + 0.1);
+    gain.gain.setValueAtTime(0.05, now);
+    gain.gain.linearRampToValueAtTime(0, now + 0.1);
+  }
+  
+  osc.start(now);
+  osc.stop(now + 0.15);
+};
+
 // --- Data Definitions ---
 
 const BLOCK_TYPES: BlockType[] = [
@@ -15,9 +50,11 @@ const BLOCK_TYPES: BlockType[] = [
   { id: 'robotics', name: 'Robotics', description: 'Hardware control and automation.', color: '#ff4d00', type: 'resource' },
   { id: 'npc', name: 'Smart NPC', description: 'Non-Player Characters with agency.', color: '#ffff00', type: 'resource' },
   { id: 'mcp', name: 'MCP Protocol', description: 'Model Context Protocol for LLMs.', color: '#ffffff', type: 'resource' },
+  { id: 'ar', name: 'Augmented Reality', description: 'Digital overlays on the physical world.', color: '#9d00ff', type: 'resource' },
+  { id: 'vr', name: 'Virtual Reality', description: 'Immersive headset experiences.', color: '#800080', type: 'resource' },
+  { id: 'xr', name: 'Extended Reality', description: 'Cross-reality experiences (AR/VR/MR).', color: '#ff007f', type: 'resource' },
   { id: 'realistic', name: 'Realistic', description: 'High-fidelity rendering and assets.', color: '#808080', type: 'resource' },
   { id: 'optimized', name: 'Optimized', description: 'High performance code.', color: '#0000ff', type: 'resource' },
-  { id: 'vr', name: 'Virtual Reality', description: 'Immersive headset experiences.', color: '#800080', type: 'resource' },
   { id: 'webgl', name: 'General Web', description: 'Standard web technologies.', color: '#008000', type: 'resource' },
   { id: 'mvp', name: 'MVP WebApp', description: 'Minimum Viable Product development.', color: '#ffc0cb', type: 'resource' },
   { id: 'nodejs', name: 'NodeJS', description: 'Backend server logic.', color: '#006400', type: 'resource' },
@@ -57,6 +94,16 @@ const Player = ({ position, setPosition, mobileInput }: { position: THREE.Vector
   
   const speed = 4.0; 
   const damping = 0.9; 
+
+  // Rotate camera on start to face the resources correctly
+  useEffect(() => {
+      // Reset rotation to ensure clean slate
+      camera.rotation.set(0, 0, 0);
+      // Look directly at the center of the resource wall
+      // Resources are at X=-18. We look at a comfortable height (4).
+      //camera.lookAt(new THREE.Vector3(-18, 4, 0));
+      //camera.rotation.z = 0; // Force no roll
+  }, [camera]);
 
   useFrame((state, delta) => {
     const { forward, backward, left, right, sprint } = get();
@@ -413,6 +460,7 @@ const VoxelGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
              };
              setPlacedBlocks(prev => [...prev, newBlock]);
              setHoldingBlock(null); // Consume block
+             playSound('place');
         }
     } else {
         // Taking
@@ -421,11 +469,13 @@ const VoxelGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             if (blockToTake) {
                 setResourceBlocks(prev => prev.filter(b => b.id !== blockToTake.id));
                 setHoldingBlock(blockToTake.type);
+                playSound('place');
             }
         } else if (hoveredData.id !== 'env' && hoveredData.type) {
             // Pick up placed block
             setPlacedBlocks(prev => prev.filter(b => b.id !== hoveredData.id));
             setHoldingBlock(hoveredData.type);
+            playSound('remove');
         }
     }
   }, [hoveredData, holdingBlock, resourceBlocks]);
@@ -555,7 +605,7 @@ Best regards,
                     <GhostBlock position={hoveredData.placementPos} />
                 )}
 
-                <Html position={[-16, 5, 0]} center transform rotation={[0, Math.PI/2, 0]}>
+                <Html position={[-16, 13, 0]} center transform rotation={[0, Math.PI/2, 0]}>
                      <div className="bg-white/90 text-black p-2 border-2 border-black font-orbitron text-xl font-bold shadow-lg">
                         INVENTORY
                      </div>
