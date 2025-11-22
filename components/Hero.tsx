@@ -1,8 +1,9 @@
+
 import React, { useRef, useMemo, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
 import * as random from 'maath/random';
-import { ArrowDown, Terminal, Cpu } from 'lucide-react';
+import { ArrowDown, Terminal, MessageSquare, PlayCircle } from 'lucide-react';
 import * as THREE from 'three';
 
 // --- 3D Components ---
@@ -251,7 +252,7 @@ const ParticleNetwork: React.FC = () => {
   );
 };
 
-const Hero: React.FC = () => {
+const Hero: React.FC<{ onStartGame: () => void }> = ({ onStartGame }) => {
   return (
     <section id="hero" className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-montseny-dark">
       
@@ -278,7 +279,7 @@ const Hero: React.FC = () => {
           <div className="inline-block bg-montseny-forest/50 backdrop-blur-sm border border-montseny-green/30 px-4 py-2 rounded-full mb-6 animate-pulse-fast pointer-events-auto">
             <span className="font-mono text-montseny-green text-xs md:text-sm tracking-widest flex items-center gap-2">
                 <span className="w-2 h-2 bg-montseny-green rounded-full animate-ping"></span>
-                SYSTEM_ONLINE :: NEURAL_CORE_ACTIVE
+                SYSTEM_ONLINE :: IAN_ACTIVE
             </span>
           </div>
 
@@ -287,23 +288,33 @@ const Hero: React.FC = () => {
           </h1>
           
           <p className="font-rajdhani text-gray-300 text-xl md:text-3xl tracking-wide max-w-3xl mx-auto mt-6 text-glow-blue pointer-events-auto">
-            Donde la <span className="text-montseny-green font-bold">Naturaleza</span> converge con el <span className="text-montseny-blue font-bold">Código</span>
+            Where <span className="text-montseny-green font-bold">Nature</span> converges with <span className="text-montseny-blue font-bold">Code</span>
           </p>
         </div>
 
         {/* CTA Buttons */}
         <div className="flex flex-col md:flex-row gap-6 justify-center items-center mt-12 pointer-events-auto">
+           <button 
+              onClick={onStartGame}
+              className="interactable group relative px-8 py-4 bg-black/80 overflow-hidden border border-white text-white font-orbitron font-bold tracking-wider transition-all hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] backdrop-blur-md"
+           >
+              <span className="absolute inset-0 w-0 bg-white transition-all duration-300 ease-out group-hover:w-full opacity-100"></span>
+              <span className="relative group-hover:text-black flex items-center gap-2 z-10">
+                <PlayCircle className="w-5 h-5" /> START PROJECT
+              </span>
+           </button>
+
            <a href="#portfolio" className="interactable group relative px-8 py-4 bg-black/80 overflow-hidden border border-montseny-green text-white font-orbitron font-bold tracking-wider transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.4)] backdrop-blur-md">
               <span className="absolute inset-0 w-0 bg-montseny-green transition-all duration-300 ease-out group-hover:w-full opacity-100"></span>
               <span className="relative group-hover:text-black flex items-center gap-2 z-10">
-                <Terminal className="w-5 h-5" /> EXPEDICIÓN DIGITAL
+                <Terminal className="w-5 h-5" /> DIGITAL EXPEDITION
               </span>
            </a>
 
-           <a href="#nexus" className="interactable group relative px-8 py-4 bg-black/80 overflow-hidden border border-montseny-blue text-white font-orbitron font-bold tracking-wider transition-all hover:shadow-[0_0_30px_rgba(0,243,255,0.4)] backdrop-blur-md">
+           <a href="#ian" className="interactable group relative px-8 py-4 bg-black/80 overflow-hidden border border-montseny-blue text-white font-orbitron font-bold tracking-wider transition-all hover:shadow-[0_0_30px_rgba(0,243,255,0.4)] backdrop-blur-md">
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-montseny-blue/20 to-transparent -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></span>
               <span className="relative flex items-center gap-2 z-10">
-                <Cpu className="w-5 h-5 text-montseny-blue" /> INVOCAR NEXUS
+                <MessageSquare className="w-5 h-5 text-montseny-blue" /> TALK TO IAN
               </span>
            </a>
         </div>

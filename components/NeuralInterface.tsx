@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Mic, MicOff, X, Terminal, Volume2, Activity, MessageSquare, Send, Cpu, Wifi, Zap } from 'lucide-react';
+import { Mic, MicOff, X, Terminal, Volume2, Activity, MessageSquare, Send, Wifi, Zap } from 'lucide-react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
@@ -110,7 +110,7 @@ const NeuralInterface: React.FC = () => {
   // --- Text Chat State ---
   const [textInput, setTextInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: 'NEXUS ONLINE. Conexión neuronal establecida. ¿Qué deseas explorar hoy?', timestamp: new Date() }
+    { role: 'model', text: 'Hello. I am IAN, the site\'s Artificial Intelligence. I am connected to Santiago\'s project database. How can I help you?', timestamp: new Date() }
   ]);
   const [isTextThinking, setIsTextThinking] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -155,7 +155,7 @@ const NeuralInterface: React.FC = () => {
         const modelMsg: ChatMessage = { role: 'model', text: responseText, timestamp: new Date() };
         setMessages(prev => [...prev, modelMsg]);
     } catch (e) {
-        setMessages(prev => [...prev, { role: 'model', text: "Error de conexión con el núcleo.", timestamp: new Date() }]);
+        setMessages(prev => [...prev, { role: 'model', text: "Connection error with service.", timestamp: new Date() }]);
     } finally {
         setIsTextThinking(false);
     }
@@ -167,7 +167,7 @@ const NeuralInterface: React.FC = () => {
     if (isVoiceConnected) {
       shutdownAudio();
     } else {
-      setVoiceStatus("INITIALIZING NEURAL LINK...");
+      setVoiceStatus("CONNECTING TO SERVER...");
       await startLiveSession();
     }
   };
@@ -189,7 +189,8 @@ const NeuralInterface: React.FC = () => {
     try {
         const apiKey = process.env.API_KEY;
         if (!apiKey) {
-            setVoiceStatus("ERR: API KEY MISSING");
+            setVoiceStatus("ERROR: MISSING API KEY");
+            alert("API KEY not configured in deployment environment (Vercel).");
             return;
         }
 
@@ -219,13 +220,13 @@ const NeuralInterface: React.FC = () => {
                 speechConfig: {
                     voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Fenrir' } },
                 },
-                systemInstruction: `Eres NEXUS, una IA ciberpunk avanzada.
-                Respuestas cortas y directas. Tono místico, futurista y tecnológico.
-                Si preguntan quién eres: "Soy el eco digital en la red Montseny XR".`,
+                systemInstruction: `You are IAN, a friendly and natural AI assistant.
+                Your job is to chat with visitors about Santiago's portfolio (Montseny XR).
+                Be brief, clear, and helpful. Speak in English.`,
             },
             callbacks: {
                 onopen: () => {
-                    setVoiceStatus("NEURAL UPLINK ESTABLISHED");
+                    setVoiceStatus("IAN LISTENING...");
                     setIsVoiceConnected(true);
                     
                     const processor = inputCtx.createScriptProcessor(4096, 1, 1);
@@ -264,19 +265,19 @@ const NeuralInterface: React.FC = () => {
                     }
                 },
                 onclose: () => {
-                    setVoiceStatus("CONNECTION LOST");
+                    setVoiceStatus("CONNECTION CLOSED");
                     setIsVoiceConnected(false);
                 },
                 onerror: (e) => {
                     console.error("Live API Error", e);
-                    setVoiceStatus("PROTOCOL ERROR");
+                    setVoiceStatus("CONNECTION ERROR");
                 }
             }
         });
 
     } catch (err: any) {
         console.error("Audio Init Failed", err);
-        setVoiceStatus("HARDWARE CONFLICT");
+        setVoiceStatus("HARDWARE ERROR");
     }
   };
 
@@ -293,7 +294,7 @@ const NeuralInterface: React.FC = () => {
   }, [isMicOn]);
 
   return (
-    <section id="nexus" className="py-20 relative bg-montseny-forest/20 border-y border-montseny-green/10 overflow-hidden">
+    <section id="ian" className="py-20 relative bg-montseny-forest/20 border-y border-montseny-green/10 overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-montseny-green/5 rounded-full blur-3xl animate-pulse"></div>
@@ -306,10 +307,10 @@ const NeuralInterface: React.FC = () => {
                         <Zap className="w-8 h-8 text-montseny-green animate-pulse" />
                      </div>
                      <h2 className="font-orbitron text-4xl md:text-5xl text-white mb-4">
-                        NEXUS <span className="text-montseny-green glitch-wrapper" data-text="CORE">CORE</span>
+                        IAN <span className="text-montseny-green glitch-wrapper" data-text="AI">AI</span>
                      </h2>
                      <p className="font-rajdhani text-xl text-gray-400 max-w-2xl mx-auto">
-                         Selecciona tu protocolo de interacción. Accede a la base de conocimiento mediante terminal o establece un enlace neuronal directo.
+                         Intelligent Artificial Natural. A language model connected to the context of this portfolio to solve your doubts. Not magic, just engineering.
                      </p>
                  </div>
 
@@ -321,11 +322,11 @@ const NeuralInterface: React.FC = () => {
                      >
                          <div className="absolute inset-0 bg-gradient-to-br from-montseny-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                          <Terminal className="w-12 h-12 text-montseny-blue mb-6 group-hover:scale-110 transition-transform duration-300" />
-                         <h3 className="font-orbitron text-2xl text-white mb-2 group-hover:text-montseny-blue transition-colors">TERMINAL LINK</h3>
+                         <h3 className="font-orbitron text-2xl text-white mb-2 group-hover:text-montseny-blue transition-colors">TEXT CHAT</h3>
                          <p className="font-mono text-sm text-gray-500 group-hover:text-gray-300">
-                            {'>'} Protocolo de texto<br/>
-                            {'>'} Consultas técnicas<br/>
-                            {'>'} Baja latencia
+                            > Ask questions about projects<br/>
+                            > Fast and accurate answers<br/>
+                            > Powered by Gemini
                          </p>
                      </button>
 
@@ -336,11 +337,11 @@ const NeuralInterface: React.FC = () => {
                      >
                          <div className="absolute inset-0 bg-gradient-to-br from-montseny-green/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                          <Activity className="w-12 h-12 text-montseny-green mb-6 group-hover:scale-110 transition-transform duration-300" />
-                         <h3 className="font-orbitron text-2xl text-white mb-2 group-hover:text-montseny-green transition-colors">NEURAL VOICE</h3>
+                         <h3 className="font-orbitron text-2xl text-white mb-2 group-hover:text-montseny-green transition-colors">VOICE MODE (LIVE)</h3>
                          <p className="font-mono text-sm text-gray-500 group-hover:text-gray-300">
-                            {'>'} Comunicación verbal<br/>
-                            {'>'} Gemini Live Audio<br/>
-                            {'>'} Inmersión total
+                            > Speak naturally with IAN<br/>
+                            > Real-time audio responses<br/>
+                            > Fluid conversational experience
                          </p>
                      </button>
                  </div>
@@ -359,10 +360,10 @@ const NeuralInterface: React.FC = () => {
                     <div className="bg-montseny-forest/80 p-4 flex justify-between items-center border-b border-montseny-green/30 relative z-50">
                         <div className="flex items-center gap-3">
                             <Terminal className="w-5 h-5 text-montseny-green" />
-                            <span className="font-mono text-montseny-green tracking-widest">NEXUS_TERMINAL_LINK</span>
+                            <span className="font-mono text-montseny-green tracking-widest">IAN_TERMINAL</span>
                             <div className="flex items-center gap-1 ml-4">
                                 <Wifi className="w-4 h-4 text-montseny-green animate-pulse" />
-                                <span className="text-xs text-montseny-green">CONNECTED</span>
+                                <span className="text-xs text-montseny-green">ONLINE</span>
                             </div>
                         </div>
                         <button 
@@ -383,7 +384,7 @@ const NeuralInterface: React.FC = () => {
                                     : 'border-montseny-green/50 bg-montseny-green/10 text-montseny-green rounded-tr-xl rounded-br-xl rounded-bl-xl'
                                 }`}>
                                     <div className="text-[10px] opacity-50 mb-1 uppercase tracking-wider">
-                                        {msg.role === 'user' ? 'USER_INPUT' : 'NEXUS_RESPONSE'}
+                                        {msg.role === 'user' ? 'YOU' : 'IAN'}
                                     </div>
                                     <div className="leading-relaxed text-base font-rajdhani font-semibold">
                                         {msg.text}
@@ -394,7 +395,7 @@ const NeuralInterface: React.FC = () => {
                         {isTextThinking && (
                             <div className="flex justify-start">
                                 <div className="text-montseny-green font-mono animate-pulse">
-                                    {'>'} PROCESSING REQUEST...
+                                    > IAN IS TYPING...
                                 </div>
                             </div>
                         )}
@@ -410,7 +411,7 @@ const NeuralInterface: React.FC = () => {
                                 value={textInput}
                                 onChange={(e) => setTextInput(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && handleTextSend()}
-                                placeholder="Ingresa comando o pregunta..."
+                                placeholder="Type here..."
                                 autoFocus
                                 className="flex-1 bg-transparent border-none text-white font-mono focus:ring-0 focus:outline-none placeholder-gray-600"
                             />
@@ -444,7 +445,7 @@ const NeuralInterface: React.FC = () => {
                          <div className="bg-black/40 backdrop-blur-md p-4 border-l-4 border-montseny-green rounded-r-lg">
                             <h3 className="font-orbitron text-2xl text-white flex items-center gap-2">
                                 <Activity className="w-5 h-5 text-montseny-green" />
-                                NEXUS.VOICE
+                                IAN (VOICE)
                             </h3>
                             <div className="flex items-center gap-2 mt-1">
                                 <div className={`w-2 h-2 rounded-full ${isVoiceConnected ? 'bg-montseny-green animate-pulse' : 'bg-red-500'}`}></div>
@@ -466,7 +467,7 @@ const NeuralInterface: React.FC = () => {
                                 onClick={toggleVoiceSession}
                                 className="px-10 py-5 bg-montseny-green text-black hover:bg-white hover:scale-105 transition-all font-orbitron font-bold text-lg rounded shadow-[0_0_30px_rgba(57,255,20,0.4)]"
                              >
-                                INICIAR ENLACE
+                                START CONVERSATION
                              </button>
                         )}
                     </div>
