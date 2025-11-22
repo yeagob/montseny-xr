@@ -1,3 +1,4 @@
+
 export interface Project {
   id: string;
   title: string;
@@ -5,6 +6,7 @@ export interface Project {
   description: string;
   imageUrl: string;
   techStack: string[];
+  link?: string;
 }
 
 export interface ChatMessage {
@@ -18,4 +20,18 @@ export enum InteractionState {
   LISTENING = 'LISTENING',
   THINKING = 'THINKING',
   SPEAKING = 'SPEAKING'
+}
+
+export interface BlockType {
+  id: string;
+  name: string;
+  description: string;
+  color: string;
+  type: 'resource' | 'placed';
+}
+
+export interface VoxelBlock {
+  id: string;
+  typeId: string;
+  position: [number, number, number];
 }

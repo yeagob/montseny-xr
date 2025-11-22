@@ -14,10 +14,10 @@ const Header: React.FC = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Inicio', href: '#hero' },
-    { name: 'Proyectos', href: '#portfolio' },
-    { name: 'Servicios', href: '#services' },
-    { name: 'NEXUS AI', href: '#nexus' },
+    { name: 'Home', href: '#hero' },
+    { name: 'Projects', href: '#portfolio' },
+    { name: 'Services', href: '#services' },
+    { name: 'IAN', href: '#ian' },
   ];
 
   return (
@@ -28,7 +28,6 @@ const Header: React.FC = () => {
           {/* Logo Area */}
           <div className="flex items-center">
             <div className="relative group cursor-pointer">
-               {/* Placeholder for SVG Logo if image fails to load or just text */}
                <div className="flex items-center gap-2">
                   <div className="w-10 h-10 bg-gradient-to-br from-montseny-green to-montseny-forest rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(108,194,74,0.5)] group-hover:shadow-[0_0_25px_rgba(108,194,74,0.8)] transition-all duration-300">
                     <Zap className="text-white w-6 h-6" />
@@ -53,7 +52,7 @@ const Header: React.FC = () => {
               </a>
             ))}
             <a href="#contact" className="px-6 py-2 bg-transparent border border-montseny-green text-montseny-green font-orbitron font-bold rounded hover:bg-montseny-green hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(108,194,74,0.2)] hover:shadow-[0_0_20px_rgba(108,194,74,0.6)]">
-              CONTACTAR
+              CONTACT
             </a>
           </div>
 

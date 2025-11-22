@@ -82,23 +82,23 @@ const Services: React.FC = () => {
   const services = [
     {
       icon: Cuboid,
-      title: 'Desarrollo Unity Avanzado',
-      desc: 'Arquitectura de software escalable para videojuegos y simulaciones industriales.'
+      title: 'Advanced Unity Development',
+      desc: 'Scalable software architecture for video games and industrial simulations.'
     },
     {
       icon: Brain,
-      title: 'Integración de IA Generativa',
-      desc: 'NEXUS AI, NPCs inteligentes y generación procedural de contenido.'
+      title: 'Generative AI Integration',
+      desc: 'IAN (Cognitive Agents), intelligent NPCs, and procedural content generation.'
     },
     {
       icon: Glasses,
-      title: 'Realidad Extendida (XR)',
-      desc: 'Experiencias inmersivas para Meta Quest, Vision Pro y WebAR.'
+      title: 'Extended Reality (XR)',
+      desc: 'Immersive experiences for Meta Quest, Vision Pro, and WebAR.'
     },
     {
       icon: Rocket,
-      title: 'Gamificación Estratégica',
-      desc: 'Transformación de procesos aburridos en experiencias adictivas.'
+      title: 'Strategic Gamification',
+      desc: 'Transforming boring processes into addictive experiences.'
     }
   ];
 
@@ -115,8 +115,8 @@ const Services: React.FC = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="font-orbitron text-4xl text-white mb-4">MISIÓN <span className="text-montseny-blue">TECNOLÓGICA</span></h2>
-          <p className="font-rajdhani text-xl text-gray-400">Soluciones que rompen la barrera entre lo físico y lo digital.</p>
+          <h2 className="font-orbitron text-4xl text-white mb-4">TECHNOLOGICAL <span className="text-montseny-blue">MISSION</span></h2>
+          <p className="font-rajdhani text-xl text-gray-400">Solutions that break the barrier between the physical and digital.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

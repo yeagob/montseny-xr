@@ -5,27 +5,30 @@ import { ExternalLink, Code, Layers } from 'lucide-react';
 const projects: Project[] = [
   {
     id: '1',
-    title: 'XR DREAMS MUSEUM',
-    category: 'XR',
-    description: 'Galería de arte inmersiva multi-usuario. Renderizado de alta fidelidad en WebGL.',
-    imageUrl: 'https://picsum.photos/seed/xr1/800/600',
-    techStack: ['Unity 3D', 'WebGL', 'Photon PUN', 'ShaderGraph'],
+    title: 'REALISTIC CAR SIMULATION',
+    category: 'Unity',
+    description: 'High-fidelity physics and rendering simulation engine. Features advanced tire friction models, suspension dynamics, and HDRP photorealistic graphics.',
+    imageUrl: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=1000&auto=format&fit=crop', // High fidelity car placeholder
+    techStack: ['Unity 3D', 'PhysX', 'HDRP', 'C#', 'Vehicle Dynamics'],
+    link: 'https://youtu.be/cDg9jP5xoeQ'
   },
   {
     id: '2',
-    title: 'NEURAL NPC TRAINER',
-    category: 'AI',
-    description: 'Simulación de entrenamiento corporativo con Agentes Cognitivos que aprenden del usuario.',
-    imageUrl: 'https://picsum.photos/seed/ai2/800/600',
-    techStack: ['Python', 'Gemini API', 'Unity Sentis', 'NLP'],
+    title: 'DIGITAL ASPHALT LAB',
+    category: 'XR',
+    description: 'Material simulation laboratory for civil engineering. Visualizes asphalt composition and stress tests using real-time compute shaders.',
+    imageUrl: 'https://images.unsplash.com/photo-1518655048521-f130df041f66?q=80&w=1000&auto=format&fit=crop', // Industrial Lab placeholder
+    techStack: ['Unity', 'ShaderGraph', 'Compute Shaders', 'Material Science'],
+    link: 'https://www.youtube.com/watch?v=VYWeSJ3niNw'
   },
   {
     id: '3',
-    title: 'FACTORY DIGITAL TWIN',
-    category: 'Unity',
-    description: 'Gemelo digital IoT para monitoreo industrial con superposición AR en tiempo real.',
-    imageUrl: 'https://picsum.photos/seed/ind3/800/600',
-    techStack: ['ARFoundation', 'MQTT', 'Azure Digital Twins'],
+    title: 'FACTORY LLM ROBOT ARM',
+    category: 'AI',
+    description: 'Robotic arm controller powered by a Python MCP (Model Context Protocol) system. Allows natural language control of industrial hardware via LLM.',
+    imageUrl: 'https://i.imgur.com/laEvelA.png',
+    techStack: ['Python', 'LLM', 'Robotics', 'MCP', 'Arduino/Serial'],
+    link: '#' // User didn't provide a specific link for this one, but kept the structure
   },
 ];
 
@@ -98,7 +101,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                         <h3 className="font-orbitron text-2xl text-white mb-2 group-hover:text-montseny-green transition-colors translate-z-10">
                             {project.title}
                         </h3>
-                        <p className="font-rajdhani text-gray-400 text-lg leading-relaxed">
+                        <p className="font-rajdhani text-gray-400 text-lg leading-relaxed line-clamp-3">
                             {project.description}
                         </p>
                     </div>
@@ -111,8 +114,8 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                                 </span>
                             ))}
                         </div>
-                        <a href="#" className="flex items-center justify-between w-full py-3 px-4 bg-white/5 hover:bg-montseny-green/20 border border-white/10 hover:border-montseny-green text-white hover:text-montseny-green transition-all group/btn">
-                            <span className="font-orbitron text-sm font-bold">VER CASO DE ESTUDIO</span>
+                        <a href={project.link || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full py-3 px-4 bg-white/5 hover:bg-montseny-green/20 border border-white/10 hover:border-montseny-green text-white hover:text-montseny-green transition-all group/btn">
+                            <span className="font-orbitron text-sm font-bold">VIEW CASE STUDY</span>
                             <ExternalLink className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                         </a>
                     </div>
@@ -134,10 +137,10 @@ const Projects: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-20">
             <div>
                 <h2 className="font-orbitron text-5xl md:text-7xl font-black text-white mb-2 tracking-tight">
-                    PROYECTOS
+                    PROJECTS
                 </h2>
                 <p className="font-rajdhani text-montseny-green text-xl md:text-2xl tracking-widest uppercase">
-                    Innovación Desplegada
+                    DEPLOYED INNOVATION
                 </p>
             </div>
             <div className="hidden md:block pb-4">
