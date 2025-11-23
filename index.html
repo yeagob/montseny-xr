@@ -176,6 +176,16 @@
         80% { clip: rect(38px, 9999px, 13px, 0); }
         100% { clip: rect(72px, 9999px, 40px, 0); }
       }
+
+      /* Vibrate animation for mic feedback */
+      @keyframes vibrate {
+        0% { transform: translate(0); }
+        20% { transform: translate(-2px, 2px); }
+        40% { transform: translate(-2px, -2px); }
+        60% { transform: translate(2px, 2px); }
+        80% { transform: translate(2px, -2px); }
+        100% { transform: translate(0); }
+      }
     </style>
   <script type="importmap">
 {

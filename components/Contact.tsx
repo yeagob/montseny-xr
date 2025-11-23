@@ -1,12 +1,13 @@
 
-import React from 'react';
-import { Mail, Github, Linkedin, Twitter } from 'lucide-react';
+import React, { useState } from 'react';
+import { Mail, Github, Linkedin, Twitter, Play } from 'lucide-react';
 
 interface ContactProps {
     onStartGame: () => void;
 }
 
 const Contact: React.FC<ContactProps> = ({ onStartGame }) => {
+  const [showEmail, setShowEmail] = useState(false);
   return (
     <footer id="contact" className="bg-montseny-forest/20 border-t border-montseny-green/20 pt-20 pb-10">
       <div className="max-w-7xl mx-auto px-4">
@@ -37,6 +38,12 @@ const Contact: React.FC<ContactProps> = ({ onStartGame }) => {
           
           <div className="flex flex-col space-y-2">
              <h4 className="font-orbitron text-white font-bold mb-2">LINKS</h4>
+             <button
+                onClick={onStartGame}
+                className="flex items-center gap-2 text-montseny-green hover:text-white transition-colors text-left font-orbitron font-bold"
+             >
+                <Play className="w-4 h-4" /> PLAY
+             </button>
              <a href="#hero" className="text-gray-400 hover:text-montseny-green">Home</a>
              <a href="#services" className="text-gray-400 hover:text-montseny-green">Services</a>
              <a href="#ian" className="text-gray-400 hover:text-montseny-blue">IAN (Chat)</a>
@@ -45,12 +52,27 @@ const Contact: React.FC<ContactProps> = ({ onStartGame }) => {
 
           <div>
              <h4 className="font-orbitron text-white font-bold mb-4">CONNECT</h4>
-             <div className="flex space-x-4">
+             <div className="flex space-x-4 items-center">
                <a href="https://github.com/yeagob" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white hover:scale-125 transition-transform"><Github /></a>
                <a href="https://www.linkedin.com/in/santiago-gamelover/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-500 hover:scale-125 transition-transform"><Linkedin /></a>
                <a href="https://x.com/SantiGameLover" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-sky-400 hover:scale-125 transition-transform"><Twitter /></a>
-               <a href="mailto:santiago@xr-dreams.com" className="text-gray-400 hover:text-red-400 hover:scale-125 transition-transform"><Mail /></a>
+               <button
+                  onClick={() => setShowEmail(!showEmail)}
+                  className="text-gray-400 hover:text-red-400 hover:scale-125 transition-transform"
+               >
+                  <Mail />
+               </button>
              </div>
+             {showEmail && (
+               <div className="mt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                 <a
+                   href="mailto:info@xrdreams.com"
+                   className="text-montseny-green hover:text-white font-mono text-sm transition-colors"
+                 >
+                   info@xrdreams.com
+                 </a>
+               </div>
+             )}
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Project } from '../types';
-import { ExternalLink, Code, Layers } from 'lucide-react';
+import { Layers } from 'lucide-react';
 
 const projects: Project[] = [
   {
@@ -8,27 +8,54 @@ const projects: Project[] = [
     title: 'REALISTIC CAR SIMULATION',
     category: 'Unity',
     description: 'High-fidelity physics and rendering simulation engine. Features advanced tire friction models, suspension dynamics, and HDRP photorealistic graphics.',
-    imageUrl: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?q=80&w=1000&auto=format&fit=crop', // High fidelity car placeholder
-    techStack: ['Unity 3D', 'PhysX', 'HDRP', 'C#', 'Vehicle Dynamics'],
+    imageUrl: '/images/projects/realistic-car.jpg',
+    techStack: ['Unity 3D', 'Zumo', 'HDRP', 'C#', 'Vehicle Dynamics'],
     link: 'https://youtu.be/cDg9jP5xoeQ'
   },
   {
     id: '2',
     title: 'DIGITAL ASPHALT LAB',
     category: 'XR',
-    description: 'Material simulation laboratory for civil engineering. Visualizes asphalt composition and stress tests using real-time compute shaders.',
-    imageUrl: 'https://images.unsplash.com/photo-1518655048521-f130df041f66?q=80&w=1000&auto=format&fit=crop', // Industrial Lab placeholder
-    techStack: ['Unity', 'ShaderGraph', 'Compute Shaders', 'Material Science'],
+    description: 'Digital twin laboratory for civil engineering. Visualizes asphalt composition and stress tests using physics simulation and machine learning.',
+    imageUrl: '/images/projects/digital-asphalt.jpg',
+    techStack: ['Unity', 'Physics', 'Digital Twin', 'Machine Learning', 'Materials'],
     link: 'https://www.youtube.com/watch?v=VYWeSJ3niNw'
   },
   {
     id: '3',
     title: 'FACTORY LLM ROBOT ARM',
     category: 'AI',
-    description: 'Robotic arm controller powered by a Python MCP (Model Context Protocol) system. Allows natural language control of industrial hardware via LLM.',
-    imageUrl: 'https://i.imgur.com/laEvelA.png',
-    techStack: ['Python', 'LLM', 'Robotics', 'MCP', 'Arduino/Serial'],
-    link: '#' // User didn't provide a specific link for this one, but kept the structure
+    description: 'Robotic arm controlled by machine learning in Python. Real-time physics simulation in Unity with socket communication for autonomous learning.',
+    imageUrl: '/images/projects/factory-robot.jpg',
+    techStack: ['Python', 'Machine Learning', 'Physics', 'Sockets', 'Unity', 'Robotics'],
+    link: '#'
+  },
+  {
+    id: '4',
+    title: 'DRAGONS',
+    category: 'XR',
+    description: 'Immersive XR experience featuring interactive dragon encounters. Real-time creature AI and stunning visual effects in extended reality.',
+    imageUrl: '/images/projects/dragons.jpg',
+    techStack: ['Unity', 'XR', 'AI Behavior', 'VFX', 'C#'],
+    link: '#'
+  },
+  {
+    id: '5',
+    title: 'BROMELITE',
+    category: 'Unity',
+    description: 'Published videogame on Steam. A unique gaming experience with innovative mechanics and immersive gameplay.',
+    imageUrl: '/images/projects/bromelite.jpg',
+    techStack: ['Unity', 'Steam', 'C#', 'Game Design', 'Multiplayer'],
+    link: '#'
+  },
+  {
+    id: '6',
+    title: 'PROTEST SIMULATOR',
+    category: 'Web',
+    description: 'Web application that transforms your daily steps into support for social causes. Walk for change and make every step count.',
+    imageUrl: '/images/projects/protest-simulator.jpg',
+    techStack: ['Web App', 'LMS', 'Frontend', 'React', 'API'],
+    link: '#'
   },
 ];
 
@@ -36,33 +63,40 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
     const cardRef = useRef<HTMLDivElement>(null);
     const [rotate, setRotate] = useState({ x: 0, y: 0 });
     const [glow, setGlow] = useState({ x: 50, y: 50 });
-  
+
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
       if (!cardRef.current) return;
-      
+
       const rect = cardRef.current.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      
+
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
-      
-      const rotateX = ((y - centerY) / centerY) * -10; // Rotate X based on Y position
-      const rotateY = ((x - centerX) / centerX) * 10; // Rotate Y based on X position
-  
+
+      const rotateX = ((y - centerY) / centerY) * -10;
+      const rotateY = ((x - centerX) / centerX) * 10;
+
       setRotate({ x: rotateX, y: rotateY });
       setGlow({ x: (x / rect.width) * 100, y: (y / rect.height) * 100 });
     };
-  
+
     const handleMouseLeave = () => {
       setRotate({ x: 0, y: 0 });
     };
-  
+
+    const handleClick = () => {
+      if (project.link && project.link !== '#') {
+        window.open(project.link, '_blank', 'noopener,noreferrer');
+      }
+    };
+
     return (
-      <div 
-        className="perspective-1000 w-full h-[500px] interactable"
+      <div
+        className="perspective-1000 w-full h-[500px] interactable cursor-pointer"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
       >
         <div 
           ref={cardRef}
@@ -106,18 +140,12 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                         </p>
                     </div>
 
-                    <div className="space-y-4">
-                        <div className="flex flex-wrap gap-2">
-                            {project.techStack.map((tech, i) => (
-                                <span key={i} className="text-xs font-mono text-montseny-blue bg-montseny-blue/10 px-2 py-1 border border-montseny-blue/20 rounded">
-                                    {tech}
-                                </span>
-                            ))}
-                        </div>
-                        <a href={project.link || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full py-3 px-4 bg-white/5 hover:bg-montseny-green/20 border border-white/10 hover:border-montseny-green text-white hover:text-montseny-green transition-all group/btn">
-                            <span className="font-orbitron text-sm font-bold">VIEW CASE STUDY</span>
-                            <ExternalLink className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                        </a>
+                    <div className="flex flex-wrap gap-2">
+                        {project.techStack.map((tech, i) => (
+                            <span key={i} className="text-xs font-mono text-montseny-blue bg-montseny-blue/10 px-2 py-1 border border-montseny-blue/20 rounded">
+                                {tech}
+                            </span>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -145,8 +173,8 @@ const Projects: React.FC = () => {
             </div>
             <div className="hidden md:block pb-4">
                 <div className="flex items-center gap-2 text-gray-500 font-mono text-sm">
-                    <Layers className="w-4 h-4" /> 
-                    <span>3D INTERACTIVE MODULES LOADED</span>
+                    <Layers className="w-4 h-4" />
+                    <span>{projects.length} 3D INTERACTIVE MODULES LOADED</span>
                 </div>
             </div>
         </div>

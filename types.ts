@@ -2,7 +2,7 @@
 export interface Project {
   id: string;
   title: string;
-  category: 'XR' | 'AI' | 'Unity';
+  category: 'XR' | 'AI' | 'Unity' | 'Web';
   description: string;
   imageUrl: string;
   techStack: string[];

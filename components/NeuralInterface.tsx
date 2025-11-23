@@ -10,10 +10,10 @@ import { ChatMessage } from '../types';
 
 // --- 3D Avatar Component ---
 
-function PhantomHead({ analyzer }: { analyzer: AnalyserNode | null }) {
+function PhantomHead({ analyzer, isSpeaking }: { analyzer: AnalyserNode | null; isSpeaking: boolean }) {
   const ref = useRef<THREE.Points>(null!);
   const count = 4000;
-  
+
   const { positions, colors } = useMemo(() => {
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
@@ -55,7 +55,7 @@ function PhantomHead({ analyzer }: { analyzer: AnalyserNode | null }) {
 
   useFrame((state) => {
     if (!ref.current) return;
-    
+
     let volume = 0;
     if (analyzer) {
         analyzer.getByteFrequencyData(dataArray);
@@ -64,14 +64,21 @@ function PhantomHead({ analyzer }: { analyzer: AnalyserNode | null }) {
 
     const t = state.clock.getElapsedTime();
     ref.current.rotation.y = Math.sin(t * 0.2) * 0.1;
-    
+
     const currentPositions = ref.current.geometry.attributes.position.array as Float32Array;
-    const intensity = volume / 255.0;
+    const baseIntensity = volume / 255.0;
+
+    // Amplify vibration when speaking (bot is talking)
+    const speakingMultiplier = isSpeaking ? 8 : 1;
+    const intensity = baseIntensity * speakingMultiplier;
 
     for(let i = 0; i < count; i++) {
-        const noise = Math.sin(t * 2 + i) * 0.0001; 
-        const reaction = intensity * (Math.random() * 0.0003); 
-        
+        // Enhanced noise when speaking
+        const noiseSpeed = isSpeaking ? 6 : 2;
+        const noiseAmplitude = isSpeaking ? 0.003 : 0.0001;
+        const noise = Math.sin(t * noiseSpeed + i) * noiseAmplitude;
+        const reaction = intensity * (Math.random() * (isSpeaking ? 0.008 : 0.0003));
+
         let ox = positions[i*3];
         let oy = positions[i*3+1];
         let oz = positions[i*3+2];
@@ -120,15 +127,20 @@ const NeuralInterface: React.FC = () => {
   const [isMicOn, setIsMicOn] = useState(true);
   const [volume, setVolume] = useState(1);
   const [voiceStatus, setVoiceStatus] = useState("OFFLINE");
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isUserTalking, setIsUserTalking] = useState(false);
 
   // Audio Refs
   const audioContextRef = useRef<AudioContext | null>(null);
+  const inputContextRef = useRef<AudioContext | null>(null);
   const analyzerRef = useRef<AnalyserNode | null>(null);
   const inputSourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
   const gainNodeRef = useRef<GainNode | null>(null);
   const processorRef = useRef<ScriptProcessorNode | null>(null);
   const nextStartTimeRef = useRef<number>(0);
   const sourcesRef = useRef<Set<AudioBufferSourceNode>>(new Set());
+  const liveSessionRef = useRef<any>(null);
 
   // --- Text Logic ---
 
@@ -173,15 +185,48 @@ const NeuralInterface: React.FC = () => {
   };
 
   const shutdownAudio = () => {
+    // Disconnect audio processors
     processorRef.current?.disconnect();
     inputSourceRef.current?.disconnect();
+
+    // Stop all microphone tracks to release the mic permission
+    if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach(track => {
+            track.stop();
+        });
+        mediaStreamRef.current = null;
+    }
+
+    // Close input audio context
+    if (inputContextRef.current && inputContextRef.current.state !== 'closed') {
+        inputContextRef.current.close();
+    }
+    inputContextRef.current = null;
+
+    // Close output audio context
     if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
         audioContextRef.current.close();
     }
     audioContextRef.current = null;
+
+    // Stop all playing audio sources
     sourcesRef.current.forEach(source => source.stop());
     sourcesRef.current.clear();
+
+    // Close live session if exists
+    if (liveSessionRef.current) {
+        try {
+            liveSessionRef.current.close();
+        } catch (e) {
+            // Session might already be closed
+        }
+        liveSessionRef.current = null;
+    }
+
+    // Reset states
     setIsVoiceConnected(false);
+    setIsSpeaking(false);
+    setIsUserTalking(false);
     setVoiceStatus("DISCONNECTED");
   };
 
@@ -209,7 +254,9 @@ const NeuralInterface: React.FC = () => {
         gainNodeRef.current = gainNode;
 
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaStreamRef.current = stream;
         const inputCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
+        inputContextRef.current = inputCtx;
         const source = inputCtx.createMediaStreamSource(stream);
         inputSourceRef.current = source;
 
@@ -231,10 +278,23 @@ const NeuralInterface: React.FC = () => {
                     
                     const processor = inputCtx.createScriptProcessor(4096, 1, 1);
                     processor.onaudioprocess = (e) => {
-                        if (!isMicOn) return;
+                        if (!isMicOn) {
+                            setIsUserTalking(false);
+                            return;
+                        }
                         const inputData = e.inputBuffer.getChannelData(0);
+
+                        // Detect if user is talking based on audio level
+                        let sum = 0;
+                        for (let i = 0; i < inputData.length; i++) {
+                            sum += Math.abs(inputData[i]);
+                        }
+                        const avgLevel = sum / inputData.length;
+                        setIsUserTalking(avgLevel > 0.01);
+
                         const pcmBlob = createBlob(inputData);
                         sessionPromise.then(session => {
+                            liveSessionRef.current = session;
                             session.sendRealtimeInput({ media: pcmBlob });
                         });
                     };
@@ -256,12 +316,24 @@ const NeuralInterface: React.FC = () => {
                         nextStartTimeRef.current = Math.max(nextStartTimeRef.current, ctx.currentTime);
                         const source = ctx.createBufferSource();
                         source.buffer = audioBuffer;
-                        source.connect(analyzer); 
+                        source.connect(analyzer);
                         analyzer.connect(gainNode);
                         source.start(nextStartTimeRef.current);
                         nextStartTimeRef.current += audioBuffer.duration;
                         sourcesRef.current.add(source);
-                        source.addEventListener('ended', () => sourcesRef.current.delete(source));
+
+                        // Set speaking state when bot starts talking
+                        setIsSpeaking(true);
+                        setVoiceStatus("IAN SPEAKING...");
+
+                        source.addEventListener('ended', () => {
+                            sourcesRef.current.delete(source);
+                            // Check if all sources finished
+                            if (sourcesRef.current.size === 0) {
+                                setIsSpeaking(false);
+                                setVoiceStatus("IAN LISTENING...");
+                            }
+                        });
                     }
                 },
                 onclose: () => {
@@ -292,6 +364,20 @@ const NeuralInterface: React.FC = () => {
         });
     }
   }, [isMicOn]);
+
+  // Cleanup audio when leaving VOICE mode or unmounting
+  useEffect(() => {
+    if (activeMode !== 'VOICE' && isVoiceConnected) {
+        shutdownAudio();
+    }
+  }, [activeMode]);
+
+  // Cleanup on component unmount
+  useEffect(() => {
+    return () => {
+        shutdownAudio();
+    };
+  }, []);
 
   return (
     <section id="ian" className="py-20 relative bg-montseny-forest/20 border-y border-montseny-green/10 overflow-hidden">
@@ -434,7 +520,7 @@ const NeuralInterface: React.FC = () => {
                 <div className="absolute inset-0 z-0">
                      <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
                         <ambientLight intensity={0.5} />
-                        <PhantomHead analyzer={analyzerRef.current} />
+                        <PhantomHead analyzer={analyzerRef.current} isSpeaking={isSpeaking} />
                      </Canvas>
                 </div>
 
@@ -473,12 +559,13 @@ const NeuralInterface: React.FC = () => {
                     </div>
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-8 pointer-events-auto bg-black/30 backdrop-blur-md p-6 rounded-3xl border border-white/10 max-w-xl mx-auto w-full">
-                        <button 
+                        <button
                             onClick={() => setIsMicOn(!isMicOn)}
                             disabled={!isVoiceConnected}
-                            className={`p-6 rounded-full border-2 transition-all interactable ${isMicOn ? 'border-montseny-green text-montseny-green shadow-[0_0_20px_rgba(57,255,20,0.4)]' : 'border-red-500 text-red-500 bg-red-500/10'} ${!isVoiceConnected && 'opacity-50 cursor-not-allowed'}`}
+                            className={`p-6 rounded-full border-2 transition-all interactable ${isMicOn ? 'border-montseny-green text-montseny-green shadow-[0_0_20px_rgba(57,255,20,0.4)]' : 'border-red-500 text-red-500 bg-red-500/10'} ${!isVoiceConnected && 'opacity-50 cursor-not-allowed'} ${isUserTalking && isMicOn ? 'animate-pulse scale-110 shadow-[0_0_40px_rgba(57,255,20,0.8)]' : ''}`}
+                            style={isUserTalking && isMicOn ? { animation: 'vibrate 0.1s linear infinite' } : {}}
                         >
-                            {isMicOn ? <Mic className="w-8 h-8" /> : <MicOff className="w-8 h-8" />}
+                            {isMicOn ? <Mic className={`w-8 h-8 ${isUserTalking ? 'animate-bounce' : ''}`} /> : <MicOff className="w-8 h-8" />}
                         </button>
 
                         <div className="flex items-center gap-4 flex-1 w-full">

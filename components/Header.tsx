@@ -35,8 +35,7 @@ const Header: React.FC<HeaderProps> = ({ onStartGame }) => {
             <div className="relative group cursor-pointer">
                <div className="flex items-center gap-2">
                   <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(108,194,74,0.5)] group-hover:shadow-[0_0_25px_rgba(108,194,74,0.8)] transition-all duration-300 overflow-hidden border border-montseny-green">
-                    {/* Placeholder for logo image */}
-                    <div className="w-full h-full bg-montseny-forest/50"></div> 
+                    <img src="/images/logo.png" alt="Montseny XR Logo" className="w-full h-full object-cover" />
                   </div>
                   <span className="font-orbitron text-2xl font-bold tracking-wider text-white">
                     MONTSENY <span className="text-montseny-green">XR</span>
