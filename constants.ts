@@ -65,7 +65,7 @@ export const PROJECTS: Project[] = [
   {
     id: 'factory-robot',
     title: 'FACTORY LLM ROBOT ARM',
-    categories: [Category.ARTIFICIAL_INTELLIGENCE],
+    categories: [Category.ARTIFICIAL_INTELLIGENCE, Category.SIMULATION],
     importance: Importance.CASUAL
     ,
     year: '2025',
