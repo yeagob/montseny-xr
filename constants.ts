@@ -80,7 +80,7 @@ export const PROJECTS: Project[] = [
     title: 'HERE BE DRAGONS',
     categories: [Category.EXTENDED_REALITY],
     importance: Importance.TOP,
-    year: '2021',
+    year: '2020',
     sortYear: 2021,
     description: 'Immersive XR experience featuring interactive dragon encounters. With stunning visual, light and audio effects in extended reality environments.',
     imageUrl: '/images/projects/dragons.jpg',

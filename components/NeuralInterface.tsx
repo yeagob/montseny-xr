@@ -76,8 +76,8 @@ function PhantomHead({ analyzer, isSpeaking }: { analyzer: AnalyserNode | null; 
     const targetExpansion = isSpeaking ? baseIntensity * 0.15 : 0;
 
     // Smoothing speeds
-    const expandSpeed = 0.3;  // How fast particles expand
-    const returnSpeed = 0.05; // How fast particles return (slower = smoother)
+    const expandSpeed = 0.03;  // How fast particles expand (slow)
+    const returnSpeed = 0.1;   // How fast particles return (faster)
 
     for(let i = 0; i < count; i++) {
         const ox = positions[i*3] || 0;
