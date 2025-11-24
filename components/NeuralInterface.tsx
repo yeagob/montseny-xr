@@ -5,7 +5,7 @@ import { Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 import { GoogleGenAI, LiveServerMessage, Modality } from '@google/genai';
 import { decode, decodeAudioData, createBlob } from '../services/audioUtils';
-import { sendMessageToNexus } from '../services/gemini';
+import { sendMessageToNexus, SYSTEM_INSTRUCTION } from '../services/gemini';
 import { ChatMessage } from '../types';
 
 // --- 3D Avatar Component ---
@@ -53,6 +53,9 @@ function PhantomHead({ analyzer, isSpeaking }: { analyzer: AnalyserNode | null; 
 
   const dataArray = useMemo(() => new Uint8Array(32), []);
 
+  // Store expansion state per particle
+  const expansionRef = useRef(new Float32Array(count).fill(0));
+
   useFrame((state) => {
     if (!ref.current) return;
 
@@ -66,46 +69,41 @@ function PhantomHead({ analyzer, isSpeaking }: { analyzer: AnalyserNode | null; 
     ref.current.rotation.y = Math.sin(t * 0.2) * 0.1;
 
     const currentPositions = ref.current.geometry.attributes.position.array as Float32Array;
+    const expansion = expansionRef.current;
     const baseIntensity = volume / 255.0;
 
-    // Amplify vibration when speaking (bot is talking)
-    const speakingMultiplier = isSpeaking ? 8 : 1;
-    const intensity = baseIntensity * speakingMultiplier;
+    // Target expansion based on speaking state
+    const targetExpansion = isSpeaking ? baseIntensity * 0.15 : 0;
 
-    // Return speed when silent (higher = faster return)
-    const returnSpeed = 0.08;
+    // Smoothing speeds
+    const expandSpeed = 0.3;  // How fast particles expand
+    const returnSpeed = 0.05; // How fast particles return (slower = smoother)
 
     for(let i = 0; i < count; i++) {
-        let ox = positions[i*3];
-        let oy = positions[i*3+1];
-        let oz = positions[i*3+2];
+        const ox = positions[i*3] || 0;
+        const oy = positions[i*3+1] || 0;
+        const oz = positions[i*3+2] || 0;
 
-        if (isNaN(ox)) ox = 0;
-        if (isNaN(oy)) oy = 0;
-        if (isNaN(oz)) oz = 0;
-
-        if (isSpeaking && intensity > 0.01) {
-            // Expand particles when speaking
-            const noiseSpeed = 6;
-            const noiseAmplitude = 0.003;
-            const noise = Math.sin(t * noiseSpeed + i) * noiseAmplitude;
-            const reaction = intensity * (Math.random() * 0.008);
-
-            currentPositions[i*3] = ox + (ox * (noise + reaction));
-            currentPositions[i*3+1] = oy + (oy * (noise + reaction));
-            currentPositions[i*3+2] = oz + (oz * (noise + reaction));
+        // Smoothly interpolate expansion value
+        if (isSpeaking) {
+            // Add some randomness when expanding
+            const randomTarget = targetExpansion * (0.5 + Math.random() * 0.5);
+            expansion[i] += (randomTarget - expansion[i]) * expandSpeed;
         } else {
-            // Gradually return to original position when silent
-            currentPositions[i*3] += (ox - currentPositions[i*3]) * returnSpeed;
-            currentPositions[i*3+1] += (oy - currentPositions[i*3+1]) * returnSpeed;
-            currentPositions[i*3+2] += (oz - currentPositions[i*3+2]) * returnSpeed;
-
-            // Add subtle idle animation
-            const idleNoise = Math.sin(t * 0.5 + i * 0.01) * 0.0005;
-            currentPositions[i*3] += ox * idleNoise;
-            currentPositions[i*3+1] += oy * idleNoise;
-            currentPositions[i*3+2] += oz * idleNoise;
+            // Return to zero (original position)
+            expansion[i] += (0 - expansion[i]) * returnSpeed;
         }
+
+        // Apply expansion: position = original * (1 + expansion)
+        const scale = 1 + expansion[i];
+
+        // Add subtle idle breathing animation (doesn't accumulate)
+        const idleBreath = Math.sin(t * 0.8 + i * 0.002) * 0.002;
+        const finalScale = scale + idleBreath;
+
+        currentPositions[i*3] = ox * finalScale;
+        currentPositions[i*3+1] = oy * finalScale;
+        currentPositions[i*3+2] = oz * finalScale;
     }
     ref.current.geometry.attributes.position.needsUpdate = true;
   });
@@ -283,9 +281,7 @@ const NeuralInterface: React.FC = () => {
                 speechConfig: {
                     voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Fenrir' } },
                 },
-                systemInstruction: `You are IAN, a friendly and natural AI assistant.
-                Your job is to chat with visitors about Santiago's portfolio (Montseny XR).
-                Be brief, clear, and helpful. Speak in English.`,
+                systemInstruction: SYSTEM_INSTRUCTION + `\n\nIMPORTANT FOR VOICE MODE: Keep responses brief and conversational since this is a spoken dialogue. Limit responses to 2-3 sentences when possible.`,
             },
             callbacks: {
                 onopen: () => {

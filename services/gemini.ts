@@ -12,7 +12,7 @@ if (apiKey) {
     console.warn("IAN Warning: No API Key found. Running in Simulation Mode.");
 }
 
-const SYSTEM_INSTRUCTION = `
+export const SYSTEM_INSTRUCTION = `
 You are IAN (Intelligent Artificial Natural), the virtual assistant for Santiago's portfolio (Montseny XR).
 
 Your Primary Goal:
