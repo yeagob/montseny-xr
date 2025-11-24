@@ -66,10 +66,10 @@ const Contact: React.FC<ContactProps> = ({ onStartGame }) => {
              {showEmail && (
                <div className="mt-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
                  <a
-                   href="mailto:info@xrdreams.com"
+                   href="mailto:info@xr-dreams.com"
                    className="text-montseny-green hover:text-white font-mono text-sm transition-colors"
                  >
-                   info@xrdreams.com
+                   info@xr-dreams.com
                  </a>
                </div>
              )}
