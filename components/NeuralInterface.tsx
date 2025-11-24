@@ -99,7 +99,7 @@ function PhantomHead({ analyzer, isSpeaking }: { analyzer: AnalyserNode | null; 
             const particleVariation = 0.5 + 0.5 * Math.sin(i * 0.1 + t * 2);
             targetScale = 1 + targetExpansion * particleVariation;
         } else {
-            targetScale = 1; // Return to original
+            targetScale = 1 - targetExpansion; // Return to original
         }
 
         // Clamp target scale to safe range
