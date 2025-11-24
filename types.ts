@@ -1,8 +1,28 @@
+// Project Categories
+export enum Category {
+  EXTENDED_REALITY = 'Extended Reality',
+  ARTIFICIAL_INTELLIGENCE = 'AI',
+  VIDEOGAMES = 'Videogames',
+  SIMULATION = 'Simulation'
+}
+
+// Project Importance Levels
+export enum Importance {
+  TOP = 'Top',
+  NORMAL = 'Standard',
+  CASUAL = 'Personal'
+}
+
+// Filter Criteria for Flow Explorer
+export type FilterCriteria = 'chronological' | 'category' | 'importance';
 
 export interface Project {
   id: string;
   title: string;
-  category: 'XR' | 'AI' | 'Unity' | 'Web';
+  categories: Category[];
+  importance: Importance;
+  year: string;
+  sortYear: number;
   description: string;
   imageUrl: string;
   techStack: string[];
