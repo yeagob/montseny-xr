@@ -79,13 +79,13 @@ export const PROJECTS: Project[] = [
     id: 'dragons',
     title: 'HERE BE DRAGONS',
     categories: [Category.EXTENDED_REALITY],
-    importance: Importance.NORMAL,
+    importance: Importance.TOP,
     year: '2021',
     sortYear: 2021,
-    description: 'Immersive XR experience featuring interactive dragon encounters. Real-time creature AI and stunning visual effects in extended reality environments.',
+    description: 'Immersive XR experience featuring interactive dragon encounters. With stunning visual, light and audio effects in extended reality environments.',
     imageUrl: '/images/projects/dragons.jpg',
-    techStack: ['Unity', 'XR', 'AI Behavior', 'VFX', 'C#'],
-    link: '#'
+    techStack: ['Unity', 'XR', 'VFX', 'C#', 'Spatial Vision','Kinect'],
+    link: 'https://www.youtube.com/watch?v=FI9n-p677VA'
   },
   {
     id: 'bromeliad',
