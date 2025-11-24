@@ -53,9 +53,6 @@ function PhantomHead({ analyzer, isSpeaking }: { analyzer: AnalyserNode | null; 
 
   const dataArray = useMemo(() => new Uint8Array(32), []);
 
-  // Store expansion state per particle
-  const expansionRef = useRef(new Float32Array(count).fill(0));
-
   useFrame((state) => {
     if (!ref.current) return;
 
@@ -69,38 +66,54 @@ function PhantomHead({ analyzer, isSpeaking }: { analyzer: AnalyserNode | null; 
     ref.current.rotation.y = Math.sin(t * 0.2) * 0.1;
 
     const currentPositions = ref.current.geometry.attributes.position.array as Float32Array;
-    const expansion = expansionRef.current;
-    const baseIntensity = volume / 255.0;
 
-    // Target expansion based on speaking state
-    const targetExpansion = isSpeaking ? baseIntensity * 0.15 : 0;
+    // Normalize volume to 0-1 and apply a subtle multiplier
+    const normalizedVolume = Math.min(volume / 255.0, 1.0);
 
-    // Smoothing speeds
-    const expandSpeed = 0.03;  // How fast particles expand (slow)
-    const returnSpeed = 0.1;   // How fast particles return (faster)
+    // Max expansion is only 3% (0.03) - very subtle
+    const maxExpansion = 0.03;
+    const targetExpansion = isSpeaking ? normalizedVolume * maxExpansion : 0;
+
+    // Speeds
+    const expandSpeed = 0.02;  // Slow expansion
+    const returnSpeed = 0.15;  // Fast return
 
     for(let i = 0; i < count; i++) {
         const ox = positions[i*3] || 0;
         const oy = positions[i*3+1] || 0;
         const oz = positions[i*3+2] || 0;
 
-        // Smoothly interpolate expansion value
+        // Get current scale (stored in the position difference from original)
+        const currentDist = Math.sqrt(
+            currentPositions[i*3] * currentPositions[i*3] +
+            currentPositions[i*3+1] * currentPositions[i*3+1] +
+            currentPositions[i*3+2] * currentPositions[i*3+2]
+        );
+        const originalDist = Math.sqrt(ox * ox + oy * oy + oz * oz);
+        const currentScale = originalDist > 0.001 ? currentDist / originalDist : 1;
+
+        // Calculate target scale
+        let targetScale: number;
         if (isSpeaking) {
-            // Add some randomness when expanding
-            const randomTarget = targetExpansion * (0.5 + Math.random() * 0.5);
-            expansion[i] += (randomTarget - expansion[i]) * expandSpeed;
+            // Add per-particle variation using sin (stable, not random)
+            const particleVariation = 0.5 + 0.5 * Math.sin(i * 0.1 + t * 2);
+            targetScale = 1 + targetExpansion * particleVariation;
         } else {
-            // Return to zero (original position)
-            expansion[i] += (0 - expansion[i]) * returnSpeed;
+            targetScale = 1; // Return to original
         }
 
-        // Apply expansion: position = original * (1 + expansion)
-        const scale = 1 + expansion[i];
+        // Clamp target scale to safe range
+        targetScale = Math.max(0.95, Math.min(1.05, targetScale));
 
-        // Add subtle idle breathing animation (doesn't accumulate)
+        // Smoothly interpolate current scale towards target
+        const speed = isSpeaking ? expandSpeed : returnSpeed;
+        const newScale = currentScale + (targetScale - currentScale) * speed;
+
+        // Add subtle idle breathing (always active, very small)
         const idleBreath = Math.sin(t * 0.8 + i * 0.002) * 0.002;
-        const finalScale = scale + idleBreath;
+        const finalScale = newScale + idleBreath;
 
+        // Apply final scale
         currentPositions[i*3] = ox * finalScale;
         currentPositions[i*3+1] = oy * finalScale;
         currentPositions[i*3+2] = oz * finalScale;

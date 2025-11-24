@@ -1,7 +1,6 @@
 import { Project, Category, Importance } from './types';
 
 export const PROJECTS: Project[] = [
-  // === NEW PROJECTS (2025) ===
   {
     id: 'space-creator',
     title: 'SPACE CREATOR',
@@ -13,6 +12,18 @@ export const PROJECTS: Project[] = [
     imageUrl: '/images/projects/space-creator.jpg',
     techStack: ['Unity', 'Multiplayer', 'Serious Game', 'C#', 'Escape Room', 'LiveKit VoiceChat', 'Game Dev'],
     link: 'https://youtu.be/0Jp53uVpq-g?si=eXDNhAsuE1vU2qo8'
+  },
+  {
+    id: 'npc-mcp',
+    title: 'NPM MCP 2D GAME',
+    categories: [Category.VIDEOGAMES, Category.ARTIFICIAL_INTELLIGENCE],
+    importance: Importance.CASUAL,
+    year: '2025',
+    sortYear: 2025,
+    description: '2D grid-based turn system where NPCs are directly controlled by a Large Language Model (LLM). The NPCs are equipped with the "superpowers" of a tool based on the Model Context Protocol (MCP).',
+    imageUrl: '/images/projects/npc-mcp.jpg',
+    techStack: ['Unity', 'LLM', 'MCP', '2D', 'Grid', 'Game Dev', 'AI NPC'],
+    link: 'https://github.com/yeagob/NPC-MCP-2D-GAME'
   },
   {
     id: 'vr-bicycle',
