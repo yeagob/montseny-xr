@@ -72,13 +72,10 @@ function PhantomHead({ analyzer, isSpeaking }: { analyzer: AnalyserNode | null; 
     const speakingMultiplier = isSpeaking ? 8 : 1;
     const intensity = baseIntensity * speakingMultiplier;
 
-    for(let i = 0; i < count; i++) {
-        // Enhanced noise when speaking
-        const noiseSpeed = isSpeaking ? 6 : 2;
-        const noiseAmplitude = isSpeaking ? 0.003 : 0.0001;
-        const noise = Math.sin(t * noiseSpeed + i) * noiseAmplitude;
-        const reaction = intensity * (Math.random() * (isSpeaking ? 0.008 : 0.0003));
+    // Return speed when silent (higher = faster return)
+    const returnSpeed = 0.08;
 
+    for(let i = 0; i < count; i++) {
         let ox = positions[i*3];
         let oy = positions[i*3+1];
         let oz = positions[i*3+2];
@@ -87,9 +84,28 @@ function PhantomHead({ analyzer, isSpeaking }: { analyzer: AnalyserNode | null; 
         if (isNaN(oy)) oy = 0;
         if (isNaN(oz)) oz = 0;
 
-        currentPositions[i*3] = ox + (ox * (noise + reaction));
-        currentPositions[i*3+1] = oy + (oy * (noise + reaction));
-        currentPositions[i*3+2] = oz + (oz * (noise + reaction));
+        if (isSpeaking && intensity > 0.01) {
+            // Expand particles when speaking
+            const noiseSpeed = 6;
+            const noiseAmplitude = 0.003;
+            const noise = Math.sin(t * noiseSpeed + i) * noiseAmplitude;
+            const reaction = intensity * (Math.random() * 0.008);
+
+            currentPositions[i*3] = ox + (ox * (noise + reaction));
+            currentPositions[i*3+1] = oy + (oy * (noise + reaction));
+            currentPositions[i*3+2] = oz + (oz * (noise + reaction));
+        } else {
+            // Gradually return to original position when silent
+            currentPositions[i*3] += (ox - currentPositions[i*3]) * returnSpeed;
+            currentPositions[i*3+1] += (oy - currentPositions[i*3+1]) * returnSpeed;
+            currentPositions[i*3+2] += (oz - currentPositions[i*3+2]) * returnSpeed;
+
+            // Add subtle idle animation
+            const idleNoise = Math.sin(t * 0.5 + i * 0.01) * 0.0005;
+            currentPositions[i*3] += ox * idleNoise;
+            currentPositions[i*3+1] += oy * idleNoise;
+            currentPositions[i*3+2] += oz * idleNoise;
+        }
     }
     ref.current.geometry.attributes.position.needsUpdate = true;
   });
