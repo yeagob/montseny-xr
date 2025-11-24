@@ -71,7 +71,7 @@ function PhantomHead({ analyzer, isSpeaking }: { analyzer: AnalyserNode | null; 
     const normalizedVolume = Math.min(volume / 255.0, 1.0);
 
     // Max expansion is only 3% (0.03) - very subtle
-    const maxExpansion = 0.03;
+    const maxExpansion = 0.3;
     const targetExpansion = isSpeaking ? normalizedVolume * maxExpansion : 0;
 
     // Speeds
