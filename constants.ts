@@ -26,28 +26,28 @@ export const PROJECTS: Project[] = [
     link: 'https://github.com/yeagob/NPC-MCP-2D-GAME'
   },
   {
-    id: 'vr-bicycle',
-    title: 'VR BICYCLE SIMULATOR',
-    categories: [Category.EXTENDED_REALITY, Category.SIMULATION],
-    importance: Importance.NORMAL,
-    year: '2025',
-    sortYear: 2025,
-    description: '(WIP)Advanced VR bicycle simulator featuring realistic physics engine. Supports both VR headsets and flat screen modes with hardware-in-the-loop integration for physical bicycle recreation.',
-    imageUrl: '/images/projects/vr-bicycle.jpg',
-    techStack: ['Unity', 'VR', 'Physics', 'Hardware-in-Loop', 'C#', 'Python', 'WIP'],
-    link: 'https://www.youtube.com/watch?v=h_RpxboDyWY'
+    id: 'football',
+    title: 'MULTIPLAYER FOOTBAL GAME',
+      categories: [Category.VIDEOGAMES],
+    importance: Importance.CASUAL,
+    year: '2022',
+    sortYear: 2022,
+      description: 'Third-person multiplayer soccer game, multiplayer server development, solving ball synchronization between realities, and Unity 3D gameplay implementation.',
+    imageUrl: '/images/projects/football.jpg',
+    techStack: ['Unity', 'GameDev', 'Multiplayer', 'C#', 'Mirror Network'],
+      link: 'https://youtu.be/6xkC6qCAfmA'
   },
   {
-    id: 'electric-scooter',
-    title: 'ELECTRIC SCOOTER SIMULATOR',
-    categories: [Category.SIMULATION],
-    importance: Importance.TOP,
-    year: '2024-2025',
-    sortYear: 2025,
-    description: 'Digital twin of an electric scooter. Features custom physics formulas for realistic driving dynamics, Nvidia PhysX for collision simulation, and comprehensive accident data collection system.',
-    imageUrl: '/images/projects/electric-scooter.jpg',
-    techStack: ['Unity', 'Nvidia PhysX', 'Digital Twin', 'Data Analytics'],
-    link: 'https://www.youtube.com/watch?v=pwog3phy4ws'
+    id: 'vertex-killer',
+    title: 'VERTEX KILLER',
+      categories: [Category.SIMULATION, Category.VIDEOGAMES],
+    importance: Importance.NORMAL,
+    year: '2021',
+    sortYear: 2021,
+      description: 'Avatar character vertex elimination system, creation of a Unity Editor tool that allowed associating geometry elimination on the avatar with a piece of clothing to prevent clipping.',
+    imageUrl: '/images/projects/vertex-killer.jpg',
+    techStack: ['Unity', 'Dinamic Mesh', 'GameDev', 'Avatar'],
+      link: 'https://www.youtube.com/watch?v=VRjfXCRUAlE'
   },
   {
     id: 'digital-asphalt',
