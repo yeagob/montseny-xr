@@ -36,9 +36,9 @@ function App() {
           <Header onStartGame={() => setIsGameMode(true)} />
           <main>
             <Hero onStartGame={() => setIsGameMode(true)} />
-            <Services />
-            <NeuralInterface />
             <Projects />
+            <NeuralInterface />
+            <Services />
           </main>
           <Contact onStartGame={() => setIsGameMode(true)} />
         </div>

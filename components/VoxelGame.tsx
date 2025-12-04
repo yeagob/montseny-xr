@@ -356,6 +356,21 @@ const VoxelGame: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         setIsTouch(isMobileDevice());
     }, []);
 
+    // Ensure cursor is visible when menus are open
+    useEffect(() => {
+        const shouldShowCursor = !isLocked || showEmailModal || (hasStarted && !isLocked && !isTouch);
+        if (shouldShowCursor) {
+            document.body.style.cursor = 'auto';
+        } else {
+            document.body.style.cursor = 'none';
+        }
+
+        // Cleanup on unmount
+        return () => {
+            document.body.style.cursor = 'auto';
+        };
+    }, [isLocked, showEmailModal, hasStarted, isTouch]);
+
     useEffect(() => {
         const blocks: any[] = [];
         BLOCK_TYPES.forEach((type, i) => {
