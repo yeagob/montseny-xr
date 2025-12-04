@@ -45,13 +45,12 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
               <Tag size={10} className="mr-1" /> {cat}
             </span>
           ))}
-          <span className={`inline-flex items-center text-xs px-2 py-1 border ${
-            project.importance === Importance.TOP
-              ? 'text-montseny-green bg-montseny-green/10 border-montseny-green/30'
-              : project.importance === Importance.NORMAL
+          <span className={`inline-flex items-center text-xs px-2 py-1 border ${project.importance === Importance.TOP
+            ? 'text-montseny-green bg-montseny-green/10 border-montseny-green/30'
+            : project.importance === Importance.NORMAL
               ? 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30'
               : 'text-gray-400 bg-gray-400/10 border-gray-400/30'
-          }`}>
+            }`}>
             <Activity size={10} className="mr-1" /> {project.importance}
           </span>
         </div>
@@ -164,7 +163,7 @@ const FlowExplorer: React.FC = () => {
     return Array.from(groups).sort((a, b) => {
       if (activeCriteria === 'chronological') return Number(b) - Number(a); // Descending year
       if (activeCriteria === 'importance') {
-        const order = [Importance.TOP, Importance.NORMAL, Importance.LOW];
+        const order = [Importance.TOP, Importance.NORMAL, Importance.CASUAL];
         return order.indexOf(a as Importance) - order.indexOf(b as Importance);
       }
       return a.localeCompare(b);
@@ -175,7 +174,7 @@ const FlowExplorer: React.FC = () => {
   const filteredProjects = useMemo(() => {
     if (!activeCriteria || !activeGroup) return [];
 
-    return PROJECTS.filter(p => {
+    const filtered = PROJECTS.filter(p => {
       if (activeCriteria === 'chronological') {
         return String(p.sortYear) === activeGroup;
       } else if (activeCriteria === 'category') {
@@ -184,6 +183,26 @@ const FlowExplorer: React.FC = () => {
         return p.importance === activeGroup;
       }
       return false;
+    });
+
+    // Sort based on criteria
+    return filtered.sort((a, b) => {
+      if (activeCriteria === 'chronological' || activeCriteria === 'category') {
+        // Sort by importance first (TOP > NORMAL > CASUAL)
+        const importanceOrder = [Importance.TOP, Importance.NORMAL, Importance.CASUAL];
+        const importanceCompare = importanceOrder.indexOf(a.importance) - importanceOrder.indexOf(b.importance);
+
+        if (importanceCompare !== 0) {
+          return importanceCompare;
+        }
+
+        // Then by date (most recent first)
+        return b.sortYear - a.sortYear;
+      } else if (activeCriteria === 'importance') {
+        // Sort by date only (most recent first)
+        return b.sortYear - a.sortYear;
+      }
+      return 0;
     });
   }, [activeCriteria, activeGroup]);
 
