@@ -481,7 +481,7 @@ const Hero: React.FC<{ onStartGame: () => void }> = ({ onStartGame }) => {
           <a href="#portfolio" className="interactable group relative px-8 py-4 bg-black/80 overflow-hidden border border-montseny-green text-white font-orbitron font-bold tracking-wider transition-all hover:shadow-[0_0_30px_rgba(57,255,20,0.4)] backdrop-blur-md">
             <span className="absolute inset-0 w-0 bg-montseny-green transition-all duration-300 ease-out group-hover:w-full opacity-100"></span>
             <span className="relative group-hover:text-black flex items-center gap-2 z-10">
-              <Terminal className="w-5 h-5" /> DIGITAL EXPEDITION
+              <Terminal className="w-5 h-5" /> PORTFOLIO
             </span>
           </a>
 

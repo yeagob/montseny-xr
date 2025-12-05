@@ -5,24 +5,29 @@ import { Clock, Layers, Star, GitBranch, RotateCcw, ArrowRight, Tag, Activity } 
 
 // === PROJECT CARD COMPONENT ===
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
+  const hasLink = project.link && project.link !== '#';
+
   const handleClick = () => {
-    if (project.link && project.link !== '#') {
+    if (hasLink) {
       window.open(project.link, '_blank', 'noopener,noreferrer');
     }
   };
 
   return (
     <div
-      className="group relative bg-black/60 rounded-xl overflow-hidden border border-white/10 hover:border-montseny-green/50 transition-all duration-300 hover:shadow-2xl hover:shadow-montseny-green/10 flex flex-col h-full cursor-pointer interactable"
+      className={`group relative bg-black/60 rounded-xl overflow-hidden border border-white/10 transition-all duration-300 flex flex-col h-full ${hasLink ? 'hover:border-montseny-green/50 hover:shadow-2xl hover:shadow-montseny-green/10 cursor-pointer interactable' : ''
+        }`}
       onClick={handleClick}
     >
       {/* Image Section */}
       <div className="relative h-48 overflow-hidden">
-        <div className="absolute inset-0 bg-montseny-green/10 z-10 group-hover:bg-transparent transition-all duration-500"></div>
+        <div className={`absolute inset-0 z-10 transition-all duration-500 ${hasLink ? 'bg-montseny-green/10 group-hover:bg-transparent' : 'bg-black/40'
+          }`}></div>
         <img
           src={project.imageUrl}
           alt={project.title}
-          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+          className={`w-full h-full object-cover transition-transform duration-700 ${hasLink ? 'transform group-hover:scale-110' : ''
+            }`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60"></div>
         <div className="absolute bottom-4 left-4">
@@ -34,7 +39,8 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
 
       {/* Content Section */}
       <div className="p-6 flex-1 flex flex-col">
-        <h3 className="font-orbitron text-xl text-white group-hover:text-montseny-green transition-colors mb-3">
+        <h3 className={`font-orbitron text-xl text-white mb-3 ${hasLink ? 'group-hover:text-montseny-green transition-colors' : ''
+          }`}>
           {project.title}
         </h3>
 
@@ -55,7 +61,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
           </span>
         </div>
 
-        <p className="font-rajdhani text-gray-400 text-sm mb-4 leading-relaxed line-clamp-3 group-hover:line-clamp-none transition-all">
+        <p className="font-rajdhani text-gray-400 text-sm mb-4 leading-relaxed line-clamp-5">
           {project.description}
         </p>
 
@@ -73,12 +79,18 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
           </div>
         </div>
 
-        {/* CTA */}
+        {/* CTA or NDA Notice */}
         <div className="mt-4">
-          <div className="w-full flex items-center justify-between px-4 py-2 border border-montseny-green/30 text-montseny-green font-rajdhani text-sm group-hover:bg-montseny-green group-hover:text-black transition-all">
-            <span>View Details</span>
-            <ArrowRight size={14} />
-          </div>
+          {hasLink ? (
+            <div className="w-full flex items-center justify-between px-4 py-2 border border-montseny-green/30 text-montseny-green font-rajdhani text-sm group-hover:bg-montseny-green group-hover:text-black transition-all">
+              <span>View Details</span>
+              <ArrowRight size={14} />
+            </div>
+          ) : (
+            <div className="w-full flex items-center justify-center px-4 py-2 border border-gray-500/30 text-gray-500 font-rajdhani text-xs bg-black/40">
+              <span>Due to NDA, I cannot show video of this project</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

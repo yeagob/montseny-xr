@@ -2,6 +2,42 @@ import { Project, Category, Importance } from './types';
 
 export const PROJECTS: Project[] = [
   {
+    id: 'vr-bicycle',
+    title: 'VR BICYCLE SIMULATOR',
+    categories: [Category.EXTENDED_REALITY, Category.SIMULATION],
+    importance: Importance.NORMAL,
+    year: '2025',
+    sortYear: 2025,
+    description: '(WIP)Advanced VR bicycle simulator featuring realistic physics engine. Supports both VR headsets and flat screen modes with hardware-in-the-loop integration for physical bicycle recreation.',
+    imageUrl: '/images/projects/vr-bicycle.jpg',
+    techStack: ['Unity', 'VR', 'Physics', 'Hardware-in-Loop', 'C#', 'Python', 'WIP'],
+    link: ''
+  },
+  {
+    id: 'virtual-fitting-room',
+    title: 'Virtual Fitting',
+    categories: [Category.ARTIFICIAL_INTELLIGENCE, Category.EXTENDED_REALITY],
+    importance: Importance.NORMAL,
+    year: '2025',
+    sortYear: 2025,
+    description: 'Web application for wedding dress stores that incorporates an AI-powered virtual fitting room. It allows users to upload their photo, digitally try on various dresses in different poses, and share the resulting personalized images.',
+    imageUrl: '/images/projects/virtual-fitting-room.jpg',
+    techStack: ['AI', 'Nano Banana', 'Virtual Try-On', 'Web App', 'E-commerce'],
+    link: 'https://atelierdebodas.com/producto/elaria/'
+  },
+  {
+    id: 'electric-scooter',
+    title: 'ELECTRIC SCOOTER SIMULATOR',
+    categories: [Category.SIMULATION],
+    importance: Importance.TOP,
+    year: '2024-2025',
+    sortYear: 2025,
+    description: 'Digital twin of an electric scooter. Features custom physics formulas for realistic driving dynamics, Nvidia PhysX for collision simulation, and comprehensive accident data collection system.',
+    imageUrl: '/images/projects/electric-scooter.jpg',
+    techStack: ['Unity', 'Nvidia PhysX', 'Digital Twin', 'Data Analytics'],
+    link: ''
+  },
+  {
     id: 'rescute-animals',
     title: 'Rescute Animals',
     categories: [Category.VIDEOGAMES],
