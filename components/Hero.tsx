@@ -3,10 +3,8 @@ import React, { useRef, useMemo, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
 import * as random from 'maath/random';
-import { ArrowDown, Terminal, MessageSquare, PlayCircle, Snowflake } from 'lucide-react';
+import { ArrowDown, Terminal, MessageSquare, PlayCircle } from 'lucide-react';
 import * as THREE from 'three';
-
-const CHRISTMAS_MODE = true;
 
 // --- 3D Components ---
 
@@ -123,169 +121,6 @@ function Spores() {
         />
       </Points>
     </group>
-  )
-}
-
-function ChristmasTree(props: any) {
-  const ref = useRef<THREE.Points>(null!);
-
-  const { treePoints, ornamentPoints, starPoints } = useMemo(() => {
-    // Tree Body (Cone)
-    const treeCount = 6000;
-    const treePos = new Float32Array(treeCount * 3);
-    const treeColors = new Float32Array(treeCount * 3);
-    const green = new THREE.Color('#39ff14');
-    const darkGreen = new THREE.Color('#0f5c0f');
-
-    for (let i = 0; i < treeCount; i++) {
-      const y = (Math.random() * 4) - 2; // Height from -2 to 2
-      const radius = (2 - y) * 0.4; // Cone shape
-      const angle = Math.random() * Math.PI * 2;
-      const r = Math.sqrt(Math.random()) * radius; // Uniform distribution in circle slice
-
-      treePos[i * 3] = Math.cos(angle) * r;
-      treePos[i * 3 + 1] = y;
-      treePos[i * 3 + 2] = Math.sin(angle) * r;
-
-      // Mix greens
-      const color = green.clone().lerp(darkGreen, Math.random());
-      treeColors[i * 3] = color.r;
-      treeColors[i * 3 + 1] = color.g;
-      treeColors[i * 3 + 2] = color.b;
-    }
-
-    // Ornaments
-    const ornamentCount = 200;
-    const ornamentPos = new Float32Array(ornamentCount * 3);
-    const ornamentColors = new Float32Array(ornamentCount * 3);
-    const ornamentPalette = [
-      new THREE.Color('#ff0000'), // Red
-      new THREE.Color('#ffd700'), // Gold
-      new THREE.Color('#00f3ff'), // Blue
-      new THREE.Color('#ff00ff'), // Purple
-    ];
-
-    for (let i = 0; i < ornamentCount; i++) {
-      const y = (Math.random() * 3.5) - 1.8; // Slightly smaller range
-      const radius = (2 - y) * 0.4;
-      const angle = Math.random() * Math.PI * 2;
-
-      // Place on surface
-      ornamentPos[i * 3] = Math.cos(angle) * radius;
-      ornamentPos[i * 3 + 1] = y;
-      ornamentPos[i * 3 + 2] = Math.sin(angle) * radius;
-
-      const color = ornamentPalette[Math.floor(Math.random() * ornamentPalette.length)];
-      ornamentColors[i * 3] = color.r;
-      ornamentColors[i * 3 + 1] = color.g;
-      ornamentColors[i * 3 + 2] = color.b;
-    }
-
-    // Star
-    const starCount = 300;
-    const starPos = new Float32Array(starCount * 3);
-    for (let i = 0; i < starCount; i++) {
-      const r = Math.random() * 0.3;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-
-      starPos[i * 3] = 0 + r * Math.sin(phi) * Math.cos(theta);
-      starPos[i * 3 + 1] = 2.2 + r * Math.sin(phi) * Math.sin(theta); // Top of tree
-      starPos[i * 3 + 2] = 0 + r * Math.cos(phi);
-    }
-
-    return { treePoints: { pos: treePos, col: treeColors }, ornamentPoints: { pos: ornamentPos, col: ornamentColors }, starPoints: starPos };
-  }, []);
-
-  useFrame((state, delta) => {
-    if (ref.current) {
-      ref.current.rotation.y += delta / 4;
-    }
-  });
-
-  return (
-    <group {...props}>
-      {/* Tree Body */}
-      <Points ref={ref} positions={treePoints.pos} colors={treePoints.col} stride={3} frustumCulled={false}>
-        <PointMaterial
-          transparent
-          vertexColors
-          size={0.015}
-          sizeAttenuation={true}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </Points>
-
-      {/* Ornaments */}
-      <Points positions={ornamentPoints.pos} colors={ornamentPoints.col} stride={3} frustumCulled={false} rotation-y={ref.current?.rotation.y}>
-        <PointMaterial
-          transparent
-          vertexColors
-          size={0.04}
-          sizeAttenuation={true}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </Points>
-
-      {/* Star */}
-      <Points positions={starPoints} stride={3} frustumCulled={false}>
-        <PointMaterial
-          transparent
-          color="#ffff00"
-          size={0.02}
-          sizeAttenuation={true}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </Points>
-    </group>
-  );
-}
-
-function Snow() {
-  const ref = useRef<THREE.Points>(null!);
-  const count = 3000;
-
-  const [positions, speeds] = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    const spd = new Float32Array(count);
-    for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 20;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 20;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 20;
-      spd[i] = Math.random() * 0.02 + 0.005;
-    }
-    return [pos, spd];
-  }, []);
-
-  useFrame((state) => {
-    if (!ref.current) return;
-    const pos = ref.current.geometry.attributes.position.array as Float32Array;
-
-    for (let i = 0; i < count; i++) {
-      pos[i * 3 + 1] -= speeds[i];
-      // Reset if too low
-      if (pos[i * 3 + 1] < -5) {
-        pos[i * 3 + 1] = 5;
-      }
-    }
-    ref.current.geometry.attributes.position.needsUpdate = true;
-  });
-
-  return (
-    <Points ref={ref} positions={positions} stride={3} frustumCulled={false}>
-      <PointMaterial
-        transparent
-        color="#ffffff"
-        size={0.03}
-        sizeAttenuation={true}
-        depthWrite={false}
-        opacity={0.6}
-        blending={THREE.AdditiveBlending}
-      />
-    </Points>
   )
 }
 
@@ -421,22 +256,20 @@ const Hero: React.FC<{ onStartGame: () => void }> = ({ onStartGame }) => {
   return (
     <section id="hero" className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-montseny-dark">
 
+      {/* Video Background Layer */}
+      <img
+        src="/webp/animation.webp"
+        alt="Background animation"
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-50"
+      />
+
       {/* 3D Scene (Background Layer) */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-1">
         <Canvas camera={{ position: [0, 0, 6], fov: 60 }}>
           <fog attach="fog" args={['#050a08', 2, 15]} />
-          {CHRISTMAS_MODE ? (
-            <>
-              <ChristmasTree />
-              <Snow />
-            </>
-          ) : (
-            <>
-              <NeuralGalaxy />
-              <CyberFloor />
-              <Spores />
-            </>
-          )}
+          <NeuralGalaxy />
+          <CyberFloor />
+          <Spores />
         </Canvas>
       </div>
 
