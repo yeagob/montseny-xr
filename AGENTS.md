@@ -116,3 +116,72 @@ Custom Tailwind colors (see index.html):
 - `montseny-forest`: #0f291e (overlay background)
 
 Fonts: `orbitron` (headers), `rajdhani` (body), `mono` (code)
+
+---
+
+## IAN AI Assistant Customization Guide
+
+IAN (Intelligent Artificial Natural) is the futuristic AI assistant on this site, supporting both **Text Chat** and **Live Voice** modes.
+
+### 1. Where IAN is Defined
+- **Text Mode logic & Client initialization**: [gemini.ts](file:///d:/ClaudeCode/Montseny-XR/services/gemini.ts)
+- **Voice Mode logic & WebSocket / Audio pipeline**: [NeuralInterface.tsx](file:///d:/ClaudeCode/Montseny-XR/components/NeuralInterface.tsx)
+
+### 2. Modifying the Prompts
+
+#### A. Main System Instruction (Text & Voice Shared Context)
+The core knowledge base, professional background of Santiago, project list, and conversational style are defined as a single constant `SYSTEM_INSTRUCTION` in [gemini.ts](file:///d:/ClaudeCode/Montseny-XR/services/gemini.ts#L15).
+- **To change Santiago's biography, project lists, or general behavior**: Edit `SYSTEM_INSTRUCTION` directly in `services/gemini.ts`. Both text and voice chat will inherit these updates.
+
+#### B. Voice-Specific System Instruction
+In [NeuralInterface.tsx](file:///d:/ClaudeCode/Montseny-XR/components/NeuralInterface.tsx#L297), the voice mode appends an extra instruction to the prompt:
+```typescript
+systemInstruction: SYSTEM_INSTRUCTION + `\n\nIMPORTANT FOR VOICE MODE: Keep responses brief and conversational since this is a spoken dialogue. Limit responses to 2-3 sentences when possible.`,
+```
+- **To change voice-only behaviors** (e.g., asking IAN to be more concise, use sound effects in speech, or adopt a certain tone during voice calls), modify this string in `components/NeuralInterface.tsx`.
+
+### 3. Modifying Chat & Voice Configurations
+
+#### A. Changing the AI Models
+- **Text Chat Model**: Configured in `initializeChat()` inside [gemini.ts](file:///d:/ClaudeCode/Montseny-XR/services/gemini.ts#L307). Currently set to `'gemini-2.5-flash'`.
+- **Voice Chat Model**: Configured in `startLiveSession()` inside [NeuralInterface.tsx](file:///d:/ClaudeCode/Montseny-XR/components/NeuralInterface.tsx#L291). Currently set to `'gemini-2.5-flash-native-audio-preview-09-2025'`.
+
+#### B. Changing the Voice Style (Voice Actor)
+Gemini Live API provides multiple prebuilt voices. In [NeuralInterface.tsx](file:///d:/ClaudeCode/Montseny-XR/components/NeuralInterface.tsx#L295), the voice is set as:
+```typescript
+voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Fenrir' } }
+```
+To change the voice, replace `'Fenrir'` with other supported Gemini voices:
+- `Puck` (Energetic, high pitch)
+- `Charon` (Deep, husky)
+- `Kore` (Clear, professional)
+- `Fenrir` (Deep, crisp)
+- `Aoede` (Warm, expressive)
+
+#### C. Changing Text Generation Parameters (Temperature)
+In [gemini.ts](file:///d:/ClaudeCode/Montseny-XR/services/gemini.ts#L310), the temperature is set to `0.7` to balance creativity and facts:
+```typescript
+temperature: 0.7,
+```
+To make IAN more factual and stick strictly to the prompt, lower this value (e.g., `0.2`). To make IAN more creative, raise it (e.g., `1.0`).
+
+### 4. Technical Architecture (Deep Dive)
+
+#### Text Mode:
+1. User types in `NeuralInterface.tsx` and clicks Send.
+2. `handleTextSend()` calls `sendMessageToNexus(message)` in `services/gemini.ts`.
+3. If first message, `initializeChat()` creates a `Chat` session using `@google/genai` client, passing `SYSTEM_INSTRUCTION` and `temperature`.
+4. Response is displayed in the custom terminal window styled with a retro green scanline CRT overlay.
+
+#### Voice Mode:
+1. User enters Voice Mode and clicks **START CONVERSATION**.
+2. `startLiveSession()` opens a bidirectional WebSocket using `ai.live.connect` with `gemini-2.5-flash-native-audio-preview-09-2025`.
+3. **Input Stream**:
+   - Microphone captured at 16000 Hz via `inputContextRef`.
+   - `ScriptProcessorNode` processes chunks in real-time, calculates sound levels to detect user talking (`avgLevel > 0.01` is `isUserTalking`), and compiles float data into 16-bit PCM blobs using `services/audioUtils.ts`.
+   - Sent via `session.sendRealtimeInput({ media: pcmBlob })`.
+4. **Output Stream**:
+   - `onmessage` callback receives base64-encoded audio chunks.
+   - Decoded to `AudioBuffer` and scheduled sequentially on output `audioContextRef` (24000 Hz) to ensure seamless playback.
+   - Outputs play through an `AnalyserNode` connected to a 3D R3F Canvas showing a **Phantom Head** particle sphere that pulses dynamically based on speaking volume.
+
