@@ -9,7 +9,7 @@ const SotanoGame: React.FC = () => {
         href="https://sotano-yeagobs-projects.vercel.app/"
         target="_blank"
         rel="noopener noreferrer"
-        className="interactable group relative block w-full max-w-4xl mx-auto overflow-hidden rounded-xl border border-montseny-green/30 hover:border-montseny-green/80 transition-all hover:shadow-[0_0_40px_rgba(57,255,20,0.3)]"
+        className="interactable group relative block w-full max-w-4xl mx-auto mt-[300px] overflow-hidden rounded-xl border border-montseny-green/30 hover:border-montseny-green/80 transition-all hover:shadow-[0_0_40px_rgba(57,255,20,0.3)]"
       >
         {/* Neon glow overlay on hover */}
         <div className="absolute inset-0 bg-gradient-to-r from-montseny-green/0 via-montseny-green/5 to-montseny-green/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
