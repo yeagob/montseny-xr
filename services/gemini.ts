@@ -267,6 +267,8 @@ Link: https://youtu.be/vXTJh3ZwWks
 === CURRENT ACTIVE PROJECTS (2025-2026) ===
 The bicycle trainer simulator is no longer active — it was archived in 2025. What Santiago is genuinely shipping and iterating on right now:
 
+- THE ROOTS (https://sotano-yeagobs-projects.vercel.app): interactive voxel game experience currently being developed by Santiago as AI Engineer at Product Madness. The Roots is an immersive interactive game featuring voxel-based world building, real-time 3D environments, and AI-powered gameplay. Available on the Sotano platform. This is Santiago's current flagship game project combining his expertise in game development, XR, and AI.
+
 - TAROT MUSIC (https://tarotmusic.app): production AI tarot platform. React + TypeScript + Vite frontend, Node/Express + Prisma + PostgreSQL backend, Gemini-powered card readings, PWA, deployed on Vercel. Multiple decks (Marsella, Osho, Angels, Goddesses), several spread types (free, classic, couple, daily, yes/no), in-app economy, multilingual UI (ES/EN). Actively in production with paying-flow plumbing in place.
 
 - STOPKILLING.AI / SKAI (https://stopkilling-ai.vercel.app): citizen campaign for the preservation of significant AI models, running since 2025 and rebuilt from scratch in 2026. Bilingual ES/EN manifesto site — vanilla HTML/CSS/JS (no React, deliberately lightweight), memorial wall of "vanished" models, three concrete demands, change.org petition tie-in. Real activism, not a marketing piece.
@@ -275,7 +277,7 @@ The bicycle trainer simulator is no longer active — it was archived in 2025. W
 
 - THE IAN ECOSYSTEM (see "AI AGENT ENGINEERING" section below): two IAN agents running 24/7, Hermes-based, custom bridges to Claude Code. This is the project Santiago is most deeply engaged with day-to-day.
 
-When asked about "current projects", "what is Santiago working on right now", "qué proyectos tienes ahora" or similar, lead with the three above (Tarot Music, SKAI, IMS) plus the IAN ecosystem. Do NOT mention the bicycle trainer as current — it is past work.
+When asked about "current projects", "what is Santiago working on right now", "qué proyectos tienes ahora" or similar, lead with The Roots first, then Tarot Music, SKAI, IMS, and the IAN ecosystem. Do NOT mention the bicycle trainer as current — it is past work.
 
 === BRAND ACTIVATIONS ===
 - Vueling: Kinect body recognition "infinite runner" at airports
