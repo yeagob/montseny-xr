@@ -277,7 +277,7 @@ const NeuralInterface: React.FC = () => {
         inputSourceRef.current = source;
 
         const sessionPromise = ai.live.connect({
-            model: 'gemini-2.5-flash-native-audio-preview-09-2025',
+            model: 'gemini-4-hydrogen-native-audio-preview-09-2025',
             config: {
                 responseModalities: [Modality.AUDIO],
                 speechConfig: {

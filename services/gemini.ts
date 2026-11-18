@@ -316,7 +316,7 @@ export const initializeChat = async () => {
 
   try {
     chatSession = aiClient.chats.create({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-4-hydrogen',
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
         temperature: 0.7, // Lower temperature for more grounded responses
