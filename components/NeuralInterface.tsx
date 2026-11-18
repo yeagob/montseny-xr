@@ -10,9 +10,12 @@ import { ChatMessage } from '../types';
 
 // --- 3D Avatar Component ---
 
-function PhantomHead({ analyzer, isSpeaking }: { analyzer: AnalyserNode | null; isSpeaking: boolean }) {
+function PhantomHead({ analyzer, isSpeaking, isUserTalking }: { analyzer: AnalyserNode | null; isSpeaking: boolean; isUserTalking: boolean }) {
   const ref = useRef<THREE.Points>(null!);
   const count = 4000;
+  // Smoothed global amplitude — driven by AI output volume and user-talking pulse.
+  // Kept outside useFrame so it survives between frames without re-renders.
+  const amplitudeRef = useRef(0);
 
   const { positions, colors } = useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -55,68 +58,54 @@ function PhantomHead({ analyzer, isSpeaking }: { analyzer: AnalyserNode | null; 
 
   useFrame((state) => {
     if (!ref.current) return;
-
-    let volume = 0;
-    if (analyzer) {
-        analyzer.getByteFrequencyData(dataArray);
-        volume = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
-    }
-
     const t = state.clock.getElapsedTime();
     ref.current.rotation.y = Math.sin(t * 0.2) * 0.1;
 
+    // 1) Sample AI output volume when it is speaking.
+    let aiVolume = 0;
+    if (analyzer && isSpeaking) {
+      analyzer.getByteFrequencyData(dataArray);
+      const sum = dataArray.reduce((a, b) => a + b, 0);
+      aiVolume = Math.min(sum / dataArray.length / 255.0, 1);
+    }
+
+    // 2) No microphone analyzer is wired into this node; while the user is
+    //    talking we synthesise a soft amplitude pulse so the orb still
+    //    visibly responds (avoids the "always expanding, never retracting"
+    //    bug — that was caused by an asymmetric variation that only added,
+    //    never subtracted).
+    const userPulse = isUserTalking ? (0.55 + 0.45 * Math.sin(t * 5.5)) * 0.55 : 0;
+
+    // 3) Smooth global amplitude towards target. One ref → no drift, no
+    //    accumulated state in the position buffer (positions are always
+    //    rewritten from the immutable `positions` source of truth).
+    const target = Math.max(aiVolume, userPulse);
+    const attack = target > amplitudeRef.current ? 0.18 : 0.07;
+    amplitudeRef.current += (target - amplitudeRef.current) * attack;
+    const amp = amplitudeRef.current;
+
     const currentPositions = ref.current.geometry.attributes.position.array as Float32Array;
+    // Max per-particle displacement when amp == 1; symmetric around baseline.
+    const maxDisplacement = 0.14;
 
-    // Normalize volume to 0-1 and apply a subtle multiplier
-    const normalizedVolume = Math.min(volume / 255.0, 1.0);
+    for (let i = 0; i < count; i++) {
+      const ox = positions[i * 3] || 0;
+      const oy = positions[i * 3 + 1] || 0;
+      const oz = positions[i * 3 + 2] || 0;
 
-    // Max expansion is only 3% (0.03) - very subtle
-    const maxExpansion = 0.3;
-    const targetExpansion = isSpeaking ? normalizedVolume * maxExpansion : 0;
+      // Symmetric wave: half the particles bulge outward, half pull inward.
+      // Two superposed frequencies give a more organic, less mechanical feel.
+      const wave =
+        0.7 * Math.sin(i * 0.13 + t * 2.4) +
+        0.3 * Math.sin(i * 0.41 + t * 4.1);
 
-    // Speeds
-    const expandSpeed = 0.02;  // Slow expansion
-    const returnSpeed = 0.15;  // Fast return
+      // Always-on breathing keeps the orb alive even when fully silent.
+      const idleBreath = Math.sin(t * 0.6 + i * 0.0017) * 0.004;
 
-    for(let i = 0; i < count; i++) {
-        const ox = positions[i*3] || 0;
-        const oy = positions[i*3+1] || 0;
-        const oz = positions[i*3+2] || 0;
-
-        // Get current scale (stored in the position difference from original)
-        const currentDist = Math.sqrt(
-            currentPositions[i*3] * currentPositions[i*3] +
-            currentPositions[i*3+1] * currentPositions[i*3+1] +
-            currentPositions[i*3+2] * currentPositions[i*3+2]
-        );
-        const originalDist = Math.sqrt(ox * ox + oy * oy + oz * oz);
-        const currentScale = originalDist > 0.001 ? currentDist / originalDist : 1;
-
-        // Calculate target scale
-        let targetScale: number;
-        if (isSpeaking) {
-            // Add per-particle variation using sin (stable, not random)
-            const particleVariation = 0.5 + 0.5 * Math.sin(i * 0.1 + t * 2);
-            targetScale = 1 + targetExpansion * particleVariation;
-        } else {
-            targetScale = 1 - targetExpansion; // Return to original
-        }
-
-        // Clamp target scale to safe range
-        targetScale = Math.max(0.95, Math.min(1.05, targetScale));
-
-        // Smoothly interpolate current scale towards target
-        const speed = isSpeaking ? expandSpeed : returnSpeed;
-        const newScale = currentScale + (targetScale - currentScale) * speed;
-
-        // Add subtle idle breathing (always active, very small)
-        const idleBreath = Math.sin(t * 0.8 + i * 0.002) * 0.002;
-        const finalScale = newScale + idleBreath;
-
-        // Apply final scale
-        currentPositions[i*3] = ox * finalScale;
-        currentPositions[i*3+1] = oy * finalScale;
-        currentPositions[i*3+2] = oz * finalScale;
+      const scale = 1 + amp * maxDisplacement * wave + idleBreath;
+      currentPositions[i * 3]     = ox * scale;
+      currentPositions[i * 3 + 1] = oy * scale;
+      currentPositions[i * 3 + 2] = oz * scale;
     }
     ref.current.geometry.attributes.position.needsUpdate = true;
   });
@@ -545,7 +534,7 @@ const NeuralInterface: React.FC = () => {
                 <div className="absolute inset-0 z-0">
                      <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
                         <ambientLight intensity={0.5} />
-                        <PhantomHead analyzer={analyzerRef.current} isSpeaking={isSpeaking} />
+                        <PhantomHead analyzer={analyzerRef.current} isSpeaking={isSpeaking} isUserTalking={isUserTalking} />
                      </Canvas>
                 </div>
 

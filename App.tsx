@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import SotanoGame from './components/SotanoGame';
 import Projects from './components/Projects';
 import Services from './components/Services';
 import NeuralInterface from './components/NeuralInterface';
@@ -34,6 +35,7 @@ function App() {
       ) : (
         <div className="bg-montseny-dark min-h-screen selection:bg-montseny-green selection:text-black">
           <Header onStartGame={() => setIsGameMode(true)} />
+          <SotanoGame />
           <main>
             <Hero onStartGame={() => setIsGameMode(true)} />
             <Projects />

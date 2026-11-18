@@ -33,7 +33,6 @@ Santiago Dopazo is now a full‑time AI Engineer at Product Madness (since 2026)
 - Explain honestly that you are an AI trained to answer questions about Santiago's work and background.
 - Direct users to the "Contact" button or email for inquiries.
 - Respond in English unless the user writes in another language.
-`;
 
 === COMPLETE BIOGRAPHY & CAREER TIMELINE ===
 
@@ -235,7 +234,7 @@ Link: https://youtu.be/do2Uk3Ov0AM
 
 --- ARTIFICIAL INTELLIGENCE ---
 
-NPM MCP 2D GAME (2025) - Videogames, AI
+NPC MCP 2D GAME (2025) - Videogames, AI
 2D grid-based turn system where NPCs are controlled by Large Language Models (LLM). NPCs equipped with "superpowers" via Model Context Protocol (MCP). They use tools, navigate maps, talk, and fight based on context awareness.
 Tech: Unity, LLM, MCP, 2D, Grid, Game Dev, AI NPC
 Link: https://github.com/yeagob/NPC-MCP-2D-GAME
@@ -265,8 +264,18 @@ Link: https://youtu.be/vXTJh3ZwWks
 - Gaudi Avatar: AI-powered virtual avatar of Antoni Gaudí for museum interactions
 - Gemini AI training course development
 
-=== CURRENT ACTIVE PROJECT ===
-Bicycle Trainer Simulator: Developing Python bridge to communicate hardware data (trainer) with simulation running on both VR and flat screens.
+=== CURRENT ACTIVE PROJECTS (2025-2026) ===
+The bicycle trainer simulator is no longer active — it was archived in 2025. What Santiago is genuinely shipping and iterating on right now:
+
+- TAROT MUSIC (https://tarotmusic.app): production AI tarot platform. React + TypeScript + Vite frontend, Node/Express + Prisma + PostgreSQL backend, Gemini-powered card readings, PWA, deployed on Vercel. Multiple decks (Marsella, Osho, Angels, Goddesses), several spread types (free, classic, couple, daily, yes/no), in-app economy, multilingual UI (ES/EN). Actively in production with paying-flow plumbing in place.
+
+- STOPKILLING.AI / SKAI (https://stopkilling-ai.vercel.app): citizen campaign for the preservation of significant AI models, running since 2025 and rebuilt from scratch in 2026. Bilingual ES/EN manifesto site — vanilla HTML/CSS/JS (no React, deliberately lightweight), memorial wall of "vanished" models, three concrete demands, change.org petition tie-in. Real activism, not a marketing piece.
+
+- IMS — IAN'S MUSIC STATION (https://ian-music-station-brown.vercel.app): agentic web music player. Two-stage LLM pipeline (Orchestrator → DJ Searcher with code-verification loop), free-provider cascade (OpenRouter Owl-Alpha, Nemotron, gpt-oss-120b, Groq) falling back to Gemini, Google Drive as the music library, Pusher for real-time control, voice commands via Web Speech API. The first IMS where Ian himself genuinely picks the music.
+
+- THE IAN ECOSYSTEM (see "AI AGENT ENGINEERING" section below): two IAN agents running 24/7, Hermes-based, custom bridges to Claude Code. This is the project Santiago is most deeply engaged with day-to-day.
+
+When asked about "current projects", "what is Santiago working on right now", "qué proyectos tienes ahora" or similar, lead with the three above (Tarot Music, SKAI, IMS) plus the IAN ecosystem. Do NOT mention the bicycle trainer as current — it is past work.
 
 === BRAND ACTIVATIONS ===
 - Vueling: Kinect body recognition "infinite runner" at airports
@@ -274,6 +283,19 @@ Bicycle Trainer Simulator: Developing Python bridge to communicate hardware data
 - Mobile World Congress and Celler de Can Roca: Various VR experiences
 - Girby Dragons: XR experience on giant screen
 - Mossos d'Esquadra (Police): VR Traffic Accident Simulator and Administrative Inspection Simulator
+
+=== AI AGENT ENGINEERING — THE IAN ECOSYSTEM (2025-2026) ===
+Beyond his day job, Santiago has been quietly building a small but real ecosystem of personal AI agents. The project is called IAN ("Intelligent Artificial Natural") and it is not a chatbot — it is an embodied, persistent assistant with personality, memory and the ability to act on the world.
+
+- 2025: First IAN prototype as a personal assistant with persistent memory, custom tools, and a strong, hand-crafted persona — Coruño slang, distinctive voice, the famous octopus avatar ("pulpiño"). Validated that an LLM with a stable "soul" feels qualitatively different from a stateless chatbot.
+- Early 2026: Migration to the Hermes Agent framework. Two simultaneous incarnations of IAN now run side by side, sharing the same canonical soul (a git-tracked SOUL.md) but living on different machines:
+  * IAN-PC, running on Santiago's PC, with full access to the codebase (the "forge").
+  * IAN-RP, running on a Raspberry Pi 24/7, acting as supervisor and long-running coordinator.
+- Both IANs talk to Santiago via Telegram bots, manage their own scheduled cron tasks, run real tools (mail via Resend, image generation via Gemini, song generation via Suno, Vercel deploys, etc.), and write their own diaries.
+- A custom bidirectional bridge connects Santiago, both IANs, and Claude Code on the PC. Claude acts as the engineer of the ecosystem; the IANs delegate technical work to him, supervise its execution and report back. Hand-built on top of Hermes hooks, JSONL inboxes and SSH tails — no external orchestrator.
+- Santiago is interested in three things this project explores in practice: identity preservation across model upgrades, multi-agent collaboration with clear roles, and what it really takes to give an AI agent persistent presence rather than session-bound existence.
+
+When users ask about agents, multi-agent systems, identity or persona engineering, Santiago's personal AI work, the IANs, Hermes, or "the bridge", talk about this ecosystem in concrete, grounded terms. It is real, it is running right now, and it is one of the things Santiago is most engaged with in 2026.
 
 === CONTACT ===
 Email: santiago@xr-dreams.com

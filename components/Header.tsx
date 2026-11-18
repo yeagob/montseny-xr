@@ -21,7 +21,7 @@ const Header: React.FC<HeaderProps> = ({ onStartGame }) => {
   const navLinks = [
     { name: 'Home', href: '#hero' },
     { name: 'Projects', href: '#portfolio' },
-    { name: 'Services', href: '#services' },
+    { name: 'About', href: '#about' },
     { name: 'IAN', href: '#ian' },
   ];
 

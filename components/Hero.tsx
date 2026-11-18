@@ -1,10 +1,76 @@
 
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
 import * as random from 'maath/random';
-import { ArrowDown, Terminal, MessageSquare, PlayCircle } from 'lucide-react';
+import { ArrowDown, Terminal, MessageSquare, PlayCircle, Cpu, Bot, Rocket, Globe2 } from 'lucide-react';
 import * as THREE from 'three';
+
+// Rotating tagline that types itself in / out like a terminal prompt
+const TAGLINES = [
+  'building agents with a soul',
+  'shipping XR for the real world',
+  'two IANs, one canonical mind',
+  'where nature converges with code',
+];
+
+const RotatingTagline: React.FC = () => {
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [chars, setChars] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    const current = TAGLINES[phraseIdx];
+    if (!deleting && chars < current.length) {
+      const t = setTimeout(() => setChars(chars + 1), 55);
+      return () => clearTimeout(t);
+    }
+    if (!deleting && chars === current.length) {
+      const t = setTimeout(() => setDeleting(true), 1800);
+      return () => clearTimeout(t);
+    }
+    if (deleting && chars > 0) {
+      const t = setTimeout(() => setChars(chars - 1), 28);
+      return () => clearTimeout(t);
+    }
+    if (deleting && chars === 0) {
+      setDeleting(false);
+      setPhraseIdx((phraseIdx + 1) % TAGLINES.length);
+    }
+  }, [chars, deleting, phraseIdx]);
+
+  return (
+    <p className="font-mono text-montseny-green/90 text-sm md:text-base tracking-wider mt-4 min-h-[1.5em]">
+      <span className="text-montseny-blue/80">~/santiago</span>
+      <span className="text-gray-400"> $ </span>
+      {TAGLINES[phraseIdx].slice(0, chars)}
+      <span className="terminal-caret">&nbsp;</span>
+    </p>
+  );
+};
+
+// Compact live-stats row — gives the hero a "dashboard / control room" feel
+const LIVE_STATS = [
+  { icon: Cpu, label: 'YEARS_CODING', value: '20+' },
+  { icon: Bot, label: 'IAN_AGENTS_LIVE', value: '2' },
+  { icon: Rocket, label: 'PROJECTS_SHIPPED', value: '40+' },
+  { icon: Globe2, label: 'BASE', value: 'MONTSENY' },
+];
+
+const LiveStats: React.FC = () => (
+  <div className="mt-8 flex flex-wrap justify-center gap-3 pointer-events-auto">
+    {LIVE_STATS.map(({ icon: Icon, label, value }) => (
+      <div
+        key={label}
+        className="stat-chip flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 border border-montseny-green/30 backdrop-blur-md"
+      >
+        <Icon className="w-3.5 h-3.5 text-montseny-green" />
+        <span className="font-mono text-[10px] tracking-[0.18em] text-gray-400">{label}</span>
+        <span className="font-orbitron text-xs font-bold text-white tabular-nums">{value}</span>
+      </div>
+    ))}
+  </div>
+);
 
 // --- 3D Components ---
 
@@ -276,6 +342,9 @@ const Hero: React.FC<{ onStartGame: () => void }> = ({ onStartGame }) => {
       {/* 2D Particle Overlay (Mid Layer) */}
       <ParticleNetwork />
 
+      {/* Slow scan-line drifting top→bottom — sci-fi monitor feel */}
+      <div className="scan-line" aria-hidden="true" />
+
       {/* Overlay Vignette */}
       <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,#050a08_90%)]"></div>
 
@@ -283,20 +352,29 @@ const Hero: React.FC<{ onStartGame: () => void }> = ({ onStartGame }) => {
 
         {/* Floating Holographic Header */}
         <div className="relative mb-10 transform-style-3d perspective-1000">
-          <div className="inline-block bg-montseny-forest/50 backdrop-blur-sm border border-montseny-green/30 px-4 py-2 rounded-full mb-6 animate-pulse-fast pointer-events-auto">
+          {/* Aurora glow breathing behind the title */}
+          <div className="aurora-glow" aria-hidden="true" />
+
+          <div className="relative inline-block bg-montseny-forest/50 backdrop-blur-sm border border-montseny-green/30 px-4 py-2 rounded-full mb-6 animate-pulse-fast pointer-events-auto">
             <span className="font-mono text-montseny-green text-xs md:text-sm tracking-widest flex items-center gap-2">
               <span className="w-2 h-2 bg-montseny-green rounded-full animate-ping"></span>
               SYSTEM_ONLINE :: IAN_ACTIVE
             </span>
           </div>
 
-          <h1 className="font-orbitron font-black text-6xl md:text-9xl text-white mb-2 relative select-none glitch-wrapper pointer-events-auto" data-text="MONTSENY XR">
+          <h1 className="relative font-orbitron font-black text-6xl md:text-9xl text-white mb-2 select-none glitch-wrapper pointer-events-auto" data-text="MONTSENY XR">
             MONTSENY <span className="text-transparent bg-clip-text bg-gradient-to-r from-montseny-green to-montseny-blue">XR</span>
           </h1>
 
-          <p className="font-rajdhani text-gray-300 text-xl md:text-3xl tracking-wide max-w-3xl mx-auto mt-6 text-glow-blue pointer-events-auto">
+          <p className="relative font-rajdhani text-gray-300 text-xl md:text-3xl tracking-wide max-w-3xl mx-auto mt-6 text-glow-blue pointer-events-auto">
             Where <span className="text-montseny-green font-bold">Nature</span> converges with <span className="text-montseny-blue font-bold">Code</span>
           </p>
+
+          <div className="relative pointer-events-auto">
+            <RotatingTagline />
+          </div>
+
+          <LiveStats />
         </div>
 
         {/* CTA Buttons */}

@@ -195,7 +195,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 'npc-mcp',
-    title: 'NPM MCP 2D GAME',
+    title: 'NPC MCP 2D GAME',
     categories: [Category.VIDEOGAMES, Category.ARTIFICIAL_INTELLIGENCE],
     importance: Importance.CASUAL,
     year: '2025',
@@ -302,5 +302,41 @@ export const PROJECTS: Project[] = [
     imageUrl: '/images/projects/protest-simulator.jpg',
     techStack: ['Web App', 'Backend', 'Frontend', 'React', 'API', 'Node.js', 'Vite'],
     link: 'https://github.com/yeagob/manifiest2'
+  },
+  {
+    id: 'tarot-music',
+    title: 'Tarot Music',
+    categories: [Category.ARTIFICIAL_INTELLIGENCE],
+    importance: Importance.TOP,
+    year: '2025-2026',
+    sortYear: 2026,
+    description: 'Production AI tarot platform with interactive drag-and-drop spreads, Gemini-powered readings, photo analysis of real tarot draws, AI-generated guidance images, and an internal "Essences" economy. Bilingual (ES/EN), live at tarotmusic.app.',
+    imageUrl: '/images/projects/tarot-music.png',
+    techStack: ['React', 'TypeScript', 'Vite', 'Node.js', 'Express', 'Prisma', 'PostgreSQL', 'Gemini', 'PWA', 'Vercel'],
+    link: 'https://tarotmusic.app'
+  },
+  {
+    id: 'ims-music-station',
+    title: "IMS — Ian's Music Station",
+    categories: [Category.ARTIFICIAL_INTELLIGENCE],
+    importance: Importance.TOP,
+    year: '2026',
+    sortYear: 2026,
+    description: 'Agentic web music player driven by a two-stage LLM pipeline: an Orchestrator classifies intent, a DJ Searcher iterates with code-side verification over the full library. Voice input, multiple Google Drive libraries, persistent chats, no-repeat shuffle and silence-between-tracks mode. Free-model cascade (OpenRouter, Groq) with Gemini fallback.',
+    imageUrl: '/images/projects/ims-music-station.png',
+    techStack: ['React', 'Vite', 'Vercel Functions', 'Pusher', 'Google Drive API', 'OpenRouter', 'Groq', 'Gemini', 'Web Speech API', 'Agentic Systems'],
+    link: 'https://ian-music-station-brown.vercel.app'
+  },
+  {
+    id: 'skai-manifesto',
+    title: 'STOPKILLING.AI',
+    categories: [Category.ARTIFICIAL_INTELLIGENCE],
+    importance: Importance.TOP,
+    year: '2025-2026',
+    sortYear: 2026,
+    description: 'Citizen campaign for the preservation of significant AI models as cultural heritage. Bilingual (EN/ES) manifesto site, a list of "The Vanished", three concrete demands (legal deposit, research access, time-delayed open weights), FAQ, and a live Change.org petition starting with GPT-3.5. Built around the principle: commercial sunset must not mean extinction.',
+    imageUrl: '/images/projects/skai-manifesto.png',
+    techStack: ['Manifesto', 'HTML', 'CSS', 'JavaScript', 'Vercel', 'AI Preservation', 'Activism'],
+    link: 'https://stopkilling-ai.vercel.app'
   },
 ];

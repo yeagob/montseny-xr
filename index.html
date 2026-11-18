@@ -9,7 +9,9 @@
     <meta property="og:url" content="https://xr-dreams.com/">
     <meta property="og:site_name" content="Montseny XR">
     <meta property="og:title" content="Where nature converges with code">
-    <title>Montseny XR | Extended Reality & AI</title>
+    <title>Montseny XR | Santiago Dopazo Portfolio</title>
+    <link rel="icon" type="image/png" href="/images/logo.png" />
+    <link rel="apple-touch-icon" href="/images/logo.png" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -182,6 +184,59 @@
         80% { clip: rect(38px, 9999px, 13px, 0); }
         100% { clip: rect(72px, 9999px, 40px, 0); }
       }
+
+      /* Aurora glow that breathes behind the hero title */
+      @keyframes aurora-pulse {
+        0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(1); filter: blur(60px); }
+        50%      { opacity: 0.85; transform: translate(-50%, -50%) scale(1.08); filter: blur(80px); }
+      }
+      .aurora-glow {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 80%; height: 120%;
+        background:
+          radial-gradient(ellipse at 30% 40%, rgba(57,255,20,0.55), transparent 60%),
+          radial-gradient(ellipse at 70% 60%, rgba(0,243,255,0.45), transparent 60%);
+        pointer-events: none;
+        animation: aurora-pulse 7s ease-in-out infinite;
+        z-index: 0;
+      }
+
+      /* Thin scan-line drifting across the hero — sci-fi monitor vibe */
+      @keyframes scan-drift {
+        0%   { transform: translateY(-10vh); opacity: 0; }
+        10%  { opacity: 0.35; }
+        90%  { opacity: 0.35; }
+        100% { transform: translateY(110vh); opacity: 0; }
+      }
+      .scan-line {
+        position: absolute;
+        left: 0; right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(57,255,20,0.8), transparent);
+        box-shadow: 0 0 18px rgba(57,255,20,0.6);
+        animation: scan-drift 9s linear infinite;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      /* Terminal-style blinking caret for the rotating tagline */
+      @keyframes caret-blink { 50% { opacity: 0; } }
+      .terminal-caret { display: inline-block; width: 0.55em; background: #39ff14; margin-left: 2px; animation: caret-blink 1s steps(1) infinite; }
+
+      /* Subtle counter glow */
+      .stat-chip {
+        position: relative;
+        overflow: hidden;
+      }
+      .stat-chip::after {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(120deg, transparent 30%, rgba(57,255,20,0.18), transparent 70%);
+        transform: translateX(-100%);
+        animation: chip-shine 4s ease-in-out infinite;
+      }
+      @keyframes chip-shine { 50% { transform: translateX(100%); } 100% { transform: translateX(100%); } }
 
       /* Vibrate animation for mic feedback */
       @keyframes vibrate {
